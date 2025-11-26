@@ -1,0 +1,11 @@
+# Badge With Dot
+
+![Badge With Dot](badge-with-dot.png)
+
+```html
+<span class="badge badge-urgent d-flex align-items-center gap-2"
+	style="background-color: #fef2f2; color: #912018; padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+	<span style="width: 10px; height: 10px; background-color: #912018; border-radius: 50%;"></span>
+	حالاً
+</span>
+```

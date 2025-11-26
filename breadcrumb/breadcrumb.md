@@ -1,0 +1,31 @@
+# Breadcrumb
+
+![Breadcrumb](breadcrumb.png)
+
+```cshtml
+<style>
+	a {
+		color: #54565B;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: #54565B;
+	}
+
+	a.active {
+		color: #9DA4AE;
+	}
+</style>
+
+
+<nav class="d-none d-sm-flex" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+	<ol dir="rtl" class="breadcrumb" style="white-space:nowrap;">
+		<li class="breadcrumb-item"><a href="/">الخدمات الإلكترونية</a></li>
+		<li class="breadcrumb-item"><a href="#">أعمال لجان هيئة الخبراء</a></li>
+		<li class="breadcrumb-item"><a href="#">اللجان المنتهية</a></li>
+		<li class="breadcrumb-item"><a href="#">بيانات لجنة منتهية</a></li>
+		<li class="breadcrumb-item active" aria-current="page">إضافة ملخص تنفيذي</li>
+	</ol>
+</nav>
+```
