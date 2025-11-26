@@ -1,6 +1,6 @@
-# Breadcrumb
+# _Breadcrumb
 
-![Breadcrumb](breadcrumb.png)
+![_Breadcrumb](breadcrumb.png)
 
 ```cshtml
 @model List<(string Name, string Url)>
