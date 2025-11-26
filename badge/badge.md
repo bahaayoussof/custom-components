@@ -6,15 +6,23 @@
 ## Implementation
 
 ```html
-@model (string Color, string BgColor, string Content, bool Dot)
+@model object
+@{
+var (Color, BgColor, Content, Dot) = Model switch
+{
+(string c, string b, string t, bool d) => (c, b, t, d),
+(string c, string b, string t) => (c, b, t, true),
+_ => throw new ArgumentException("Invalid model type provided to _CustomBadge")
+};
+}
 
 <span class="badge d-flex align-items-center gap-2 px-3 py-2 rounded-5"
-      style="background-color: @Model.BgColor; color: @Model.Color; font-size: 14px; width: fit-content;">
-    @if (Model.Dot)
-    {
-        <span style="width: 10px; height: 10px; background-color: @Model.Color; border-radius: 50%;"></span>
-    }
-    @Model.Content
+	style="background-color: @BgColor; color: @Color; font-size: 14px; width: fit-content;">
+	@if (Dot)
+	{
+	<span style="width: 10px; height: 10px; background-color: @Color; border-radius: 50%;"></span>
+	}
+	@Content
 </span>
 ```
 
