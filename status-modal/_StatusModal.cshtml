@@ -1,0 +1,118 @@
+<!-- Generic Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body p-4 bg-white rounded-4">
+				<div class="d-flex justify-content-between align-items-center mb-4">
+					<div class="d-flex align-items-center justify-content-center" id="iconContainer">
+						<!-- Icon will be injected here dynamically -->
+					</div>
+					<button type="button" class="btn-close modalCancelBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<!-- Dynamic Title -->
+				<h5 class="text-muted fw-bold" style="color: #161616;" id="modalTitle"></h5>
+
+				<!-- Dynamic Message (optional) -->
+				<p class="text-muted mb-3" id="modalMessage" style="display: none;"></p>
+
+				<!-- Action Buttons -->
+				<div class="d-flex gap-3 mt-4" id="actionsContainer">
+					<button type="button" class="btn btn-outline-secondary px-4 py-2 modalCancelBtn" data-bs-dismiss="modal">
+						إلغاء
+					</button>
+					<button type="button" class="btn px-4 py-2 btn-primary" id="modalActionBtn"
+						style="display: none; border: none">
+						تأكيد
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	// SVG ICONS
+	const icons = {
+		success: `
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z" fill="#F9FAFB"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.9987 29.1663C25.0613 29.1663 29.1654 25.0623 29.1654 19.9997C29.1654 14.9371 25.0613 10.833 19.9987 10.833C14.9361 10.833 10.832 14.9371 10.832 19.9997C10.832 25.0623 14.9361 29.1663 19.9987 29.1663Z" fill="white"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.9987 29.1663C25.0613 29.1663 29.1654 25.0623 29.1654 19.9997C29.1654 14.9371 25.0613 10.833 19.9987 10.833C14.9361 10.833 10.832 14.9371 10.832 19.9997C10.832 25.0623 14.9361 29.1663 19.9987 29.1663ZM15.8739 19.2674C15.5484 19.5929 15.5484 20.1205 15.8739 20.446L18.2309 22.803C18.5563 23.1284 19.084 23.1284 19.4094 22.803L24.1235 18.0889C24.4489 17.7635 24.4489 17.2359 24.1235 16.9104C23.798 16.585 23.2704 16.585 22.9449 16.9104L18.8202 21.0352L17.0524 19.2674C16.727 18.942 16.1993 18.942 15.8739 19.2674Z" fill="#045859"/>
+        </svg>
+    `,
+		error: `
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z" fill="#FEF2F2"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.9987 29.1663C25.0613 29.1663 29.1654 25.0623 29.1654 19.9997C29.1654 14.9371 25.0613 10.833 19.9987 10.833C14.9361 10.833 10.832 14.9371 10.832 19.9997C10.832 25.0623 14.9361 29.1663 19.9987 29.1663Z" fill="white"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.9987 29.1663C25.0613 29.1663 29.1654 25.0623 29.1654 19.9997C29.1654 14.9371 25.0613 10.833 19.9987 10.833C14.9361 10.833 10.832 14.9371 10.832 19.9997C10.832 25.0623 14.9361 29.1663 19.9987 29.1663ZM16.4654 16.4664C16.7908 16.141 17.3185 16.141 17.6439 16.4664L19.9987 18.8212L22.3535 16.4664C22.6789 16.141 23.2066 16.141 23.532 16.4664C23.8575 16.7919 23.8575 17.3195 23.532 17.645L21.1772 19.9997L23.532 22.3545C23.8575 22.68 23.8575 23.2076 23.532 23.5331C23.2066 23.8585 22.6789 23.8585 22.3535 23.5331L19.9987 21.1783L17.6439 23.5331C17.3185 23.8585 16.7908 23.8585 16.4654 23.5331C16.1399 23.2076 16.1399 22.68 16.4654 22.3545L18.8202 19.9997L16.4654 17.645C16.1399 17.3195 16.1399 16.7919 16.4654 16.4664Z" fill="#DC2626"/>
+        </svg>
+    `,
+		info: `
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z" fill="#F9FAFB"/>
+					<path d="M19.1615 22.5003C19.1615 22.0401 19.5346 21.667 19.9948 21.667H20.0023C20.4625 21.667 20.8356 22.0401 20.8356 22.5003C20.8356 22.9606 20.4625 23.3337 20.0023 23.3337H19.9948C19.5346 23.3337 19.1615 22.9606 19.1615 22.5003Z" fill="#161616"/>
+					<path d="M19.3763 20.0003C19.3763 20.3455 19.6561 20.6253 20.0013 20.6253C20.3465 20.6253 20.6263 20.3455 20.6263 20.0003V16.667C20.6263 16.3218 20.3465 16.042 20.0013 16.042C19.6561 16.042 19.3763 16.3218 19.3763 16.667V20.0003Z" fill="#161616"/>
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M11.043 20.0003C11.043 15.0528 15.0538 11.042 20.0013 11.042C24.9489 11.042 28.9596 15.0528 28.9596 20.0003C28.9596 24.9479 24.9489 28.9587 20.0013 28.9587C15.0538 28.9587 11.043 24.9479 11.043 20.0003ZM20.0013 12.292C15.7441 12.292 12.293 15.7431 12.293 20.0003C12.293 24.2575 15.7441 27.7087 20.0013 27.7087C24.2585 27.7087 27.7096 24.2575 27.7096 20.0003C27.7096 15.7431 24.2585 12.292 20.0013 12.292Z" fill="#161616"/>
+				</svg>
+    `,
+	};
+
+	// Generic function to show status modal
+	function showStatusModal(options) {
+		const settings = {
+			type: 'success',
+			title: '',
+			message: '',
+			showActionButton: false,
+			actionButtonText: 'تأكيد',
+			onConfirm: null,
+			onCancel: null,
+			...options
+		};
+
+		const $modal = $('#statusModal');
+		const $iconContainer = $('#iconContainer');
+		const $title = $('#modalTitle');
+		const $message = $('#modalMessage');
+		const $actionBtn = $('#modalActionBtn');
+		const $cancelBtn = $modal.find('.modalCancelBtn');
+		const $buttonContainer = $('#actionsContainer');
+
+		// Set icon and title
+		$iconContainer.html(icons[settings.type] || icons.success);
+		$title.text(settings.title);
+
+		// Set button container justify-content based on type
+		$buttonContainer.removeClass('justify-content-end justify-content-between');
+		$buttonContainer.addClass(settings.type === 'info' ? 'justify-content-between' : 'justify-content-end');
+
+		// Toggle message visibility
+		$message.toggle(!!settings.message).text(settings.message);
+
+		// Configure action button
+		if (settings.showActionButton) {
+			$actionBtn.text(settings.actionButtonText)
+				.off('click')
+				.on('click', () => {
+					if (typeof settings.onConfirm === 'function') {
+						settings.onConfirm();
+					}
+					$modal.modal('hide');
+				})
+				.show();
+		} else {
+			$actionBtn.hide();
+		}
+
+		// Configure cancel button
+		$cancelBtn.off('click').on('click', () => {
+			if (typeof settings.onCancel === 'function') {
+				settings.onCancel();
+			}
+			$modal.modal('hide');
+		});
+
+		$modal.modal('show');
+	}
+</script>
