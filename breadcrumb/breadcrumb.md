@@ -3,29 +3,46 @@
 ![Breadcrumb](breadcrumb.png)
 
 ```cshtml
-<style>
-	a {
-		color: #54565B;
-		text-decoration: none;
-	}
+@model List<(string Name, string Url)>
 
-	a:hover {
-		color: #54565B;
-	}
+	<style>
+		a {
+			color: #54565B;
+			text-decoration: none;
+		}
 
-	a.active {
-		color: #9DA4AE;
-	}
-</style>
+		a:hover {
+			color: #54565B;
+		}
 
+		a.active {
+			color: #9DA4AE;
+		}
+	</style>
 
-<nav class="d-none d-sm-flex" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-	<ol dir="rtl" class="breadcrumb" style="white-space:nowrap;">
-		<li class="breadcrumb-item"><a href="/">الخدمات الإلكترونية</a></li>
-		<li class="breadcrumb-item"><a href="#">أعمال لجان هيئة الخبراء</a></li>
-		<li class="breadcrumb-item"><a href="#">اللجان المنتهية</a></li>
-		<li class="breadcrumb-item"><a href="#">بيانات لجنة منتهية</a></li>
-		<li class="breadcrumb-item active" aria-current="page">إضافة ملخص تنفيذي</li>
-	</ol>
-</nav>
+	<nav class="d-none d-sm-flex" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+		<ol dir="rtl" class="breadcrumb" style="white-space:nowrap;">
+			@for (int i = 0; i < Model.Count; i++) { var item=Model[i]; var isActive=i==Model.Count - 1; <li
+				class="breadcrumb-item" aria-current="page">
+				<a href="@item.Url" class="@(isActive ? " active" : "" )">@item.Name</a>
+				</li>
+				}
+		</ol>
+	</nav>
+```
+
+### How to use
+```cshtml
+define breadcrumb list:
+	- last item in the list is active by default
+@{
+    var breadcrumb = new List<(string Name, string Url)>
+    {
+        ("الرئيسية", "/"),
+        ("الخدمات الإلكترونية", "/services"),
+        ("أعمال لجان هيئة الخبراء", "/services/works"),
+    };
+}
+
+<partial name="_Breadcrumb" model="breadcrumb" />
 ```
