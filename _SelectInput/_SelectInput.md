@@ -1,0 +1,42 @@
+# _SelectInput
+
+![_SelectInput](select.png)
+
+```html
+@model (string Label, bool Required, string Id, string DefaultOptionText, List<(string Value, string Text)> Options)
+
+	<div class="my-3">
+		<label class="form-label text-gray-700" for="@Model.Id">
+			@if (Model.Required)
+			{
+			<span class="text-danger">*</span>
+			}
+			@Model.Label
+		</label>
+		<select class="form-select" name="@Model.Id" id="@Model.Id" @(Model.Required ? "required" : "" )>
+			<option value="">@Model.DefaultOptionText</option>
+			@if (Model.Options != null)
+			{
+			foreach (var option in Model.Options)
+			{
+			<option value="@option.Value">@option.Text</option>
+			}
+			}
+		</select>
+	</div>
+```
+
+### How to use
+
+```cshtml
+var selectFieldOptions = new List<(string Value, string Text)>
+{
+	("1", "غرض 1"),
+	("2", "غرض 2"),
+	("3", "غرض 3"),
+};
+
+<partial name="_SelectInput" model='("عنصر مطلوب", true, "my-custom-id-1", "عنصر مطلوب", selectFieldOptions)' />
+<partial name="_SelectInput" model='("عنصر غير مطلوب", false, "my-custom-id-2", "عنصر غير مطلوب", selectFieldOptions)' />
+
+```
