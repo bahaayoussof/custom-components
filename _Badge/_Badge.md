@@ -44,3 +44,13 @@ radius = 4
 <!-- Badge with custom radius -->
 <partial name="_CustomBadge" model='("#026b66", "#f2f2f2", "عاجل", false, 3)' />
 ```
+
+<!-- make table of parameters with default values if found -->
+
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Color | string | The color of the badge | "" |
+| BgColor | string | The background color of the badge | "" |
+| Content | string | The content of the badge | "" |
+| Dot | bool | Whether the badge has a dot or not | true |
+| Radius | int | The radius of the badge | 4 |
