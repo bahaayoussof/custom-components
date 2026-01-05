@@ -26,7 +26,9 @@ Use the `showStatusModal()` function with your desired options:
 showStatusModal({
   type: "success",
   title: "تم الحفظ بنجاح",
+  titleColor: '#212529bf',
   message: "هل تريد الانتقال إلى الصفحة الرئيسية؟",
+  messageStyle: {},
   showActionButton: true,
   actionButtonText: "تأكيد",
   onConfirm: function () {
@@ -42,13 +44,15 @@ showStatusModal({
 
 | Option             | Type     | Default   | Description                                     |
 | ------------------ | -------- | --------- | ----------------------------------------------- |
-| `type`             | string   | 'success' | Modal type: 'success', 'info', 'error'          |
-| `title`            | string   | 'empty string'| Main title text [bold text]                     |
-| `message`          | string   | 'empty string'| Optional message below title [normal text]      |
-| `showActionButton` | boolean  | false     | Show/hide the action button                     |
-| `actionButtonText` | string   | 'تأكيد'   | Text for action button                          |
-| `onConfirm`        | function | null      | Callback when confirm button is clicked         |
-| `onCancel`         | function | null      | Callback when [cancel, close] button is clicked |
+| `type`             | string   | 'success' | Modal type: 'success', 'info', 'error'|
+| `title`            | string   | 'empty string'| Main title text [bold text]|
+| `titleColor`       | string   | '#212529bf'| Title color|
+| `message`          | string   | 'empty string'| Optional message below title|
+| `messageStyle`     | object   | {}        | Optional message style|
+| `showActionButton` | boolean  | false     | Show/hide the action button|
+| `actionButtonText` | string   | 'تأكيد'   | Text for action button|
+| `onConfirm`        | function | null      | Callback when confirm button is clicked|
+| `onCancel`         | function | null      | Callback when [cancel, close] button is clicked|
 
 ## Complete Example in a View
 
@@ -71,7 +75,9 @@ showStatusModal({
             showStatusModal({
                 type: "info",
                 title: "تم الحفظ بنجاح",
+                titleColor: '#212529bf',
                 message: "هل تريد الانتقال إلى الصفحة الرئيسية؟",
+                messageStyle: {},
                 showActionButton: true,
                 actionButtonText: "تأكيد",
                 onConfirm: function () {
