@@ -1,0 +1,231 @@
+/* this file contains data table styles and action button with dropdown */
+
+/* Table look */
+#ListData .table-wrapper,
+#ListData .jtable-main-container {
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	overflow: hidden;
+	background: #fff;
+}
+
+table thead th {
+	border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+
+/* Header background */
+#ListData .table thead,
+#ListData .table thead tr,
+#ListData .table thead th,
+#ListData .jtable thead,
+#ListData .jtable thead tr,
+#ListData .jtable thead th {
+	background-color: #f5f7f9 !important;
+}
+
+/* Bootstrap table var */
+#ListData .table thead {
+	--bs-table-bg: #f5f7f9 !important;
+}
+
+/* Header cells */
+#ListData .table thead th,
+#ListData .jtable thead th {
+	color: #6c757d !important;
+	font-weight: 500;
+	padding: 12px 16px !important;
+}
+
+/* Body cells */
+#ListData .table tbody td,
+#ListData .jtable tbody td {
+	vertical-align: middle;
+	padding: 12px 16px !important;
+}
+
+#ListData .wrappingText {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 520px;
+}
+
+/* Status pill styles */
+.status-pill {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 4px 12px;
+	border-radius: 4px;
+	font-weight: 400;
+}
+
+.status-published {
+	background: var(--Tag-tag-background-success-light, rgba(236, 253, 243, 1));
+	color: var(--Tag-tag-text-success, rgba(8, 93, 58, 1));
+}
+
+.status-draft {
+	background: #f8f9fa;
+	color: #212529;
+}
+
+.status-unpublished {
+	background: #fff3cd;
+	color: #7a4b00;
+}
+
+.status-inprogress,
+.status-completed {
+	background: var(--Tag-tag-background-neutral-light, rgba(249, 250, 251, 1));
+	color: var(--Tag-tag-text-neutral, rgba(31, 42, 55, 1));
+}
+
+.status-rejected {
+	background: var(--Tag-tag-background-warning-light, rgba(255, 250, 235, 1));
+	border: 1px solid var(--Tag-tag-border-warning-light, rgba(254, 223, 137, 1));
+	color: var(--Tag-tag-text-warning, rgba(147, 55, 13, 1));
+}
+
+.duration-pill {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2px 10px;
+	border-radius: 4px;
+	background: #e8f7f7;
+	color: #016b68;
+	font-weight: 500;
+	width: 91.14283752441406px;
+	border: 1px solid rgba(179, 233, 233, 1);
+}
+
+/*Table action button and dropdown */
+.action-btn {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: none;
+	background: #fff;
+	color: #6c757d;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.dropdown-menu {
+	min-width: 180px;
+	position: absolute;
+}
+
+/* Role chips inside roles column */
+#ListData .roles-cell {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+#ListData .role-chip {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 6px;
+	background: #f3f4f6e4;
+	/* border: 1px solid #e5e7eb; */
+	color: #374151;
+	font-size: 12px;
+	line-height: 1.2;
+}
+
+/* MomahTable Search Bar */
+.momah-search-input {
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	padding: 12px 50px 12px 50px;
+	background: #ffffff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.momah-btn-clear {
+	left: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	color: #6b7280;
+	font-size: 16px;
+	display: none;
+	width: 20px;
+	height: 20px;
+}
+
+.momah-search-icon {
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #6b7280;
+	cursor: pointer;
+}
+
+/* MomahTable Filter Button */
+.momah-filter-btn {
+	background-color: #f9fafb;
+	color: #374151;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	padding: 9px 16px;
+	font-weight: 500;
+	min-width: 140px;
+}
+
+.momah-filter-btn-icon {
+	font-size: 12px;
+	color: #6b7280;
+	margin-left: 4px;
+}
+
+.search-container {
+	position: relative;
+}
+
+.search-input {
+	transition: all 0.2s ease;
+}
+
+.search-input:focus {
+	border-color: #016b68 !important;
+	box-shadow: 0 0 0 0.2rem rgba(1, 107, 104, 0.25) !important;
+	outline: none;
+}
+
+.btn-clear {
+	transition: color 0.2s ease;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.btn-clear:hover,
+.search-icon-text:hover {
+	color: #374151 !important;
+}
+
+.filter-btn,
+.search-icon-text {
+	transition: color 0.2s ease;
+}
+
+.filter-btn:hover {
+	background-color: #f3f4f6 !important;
+	border-color: #9ca3af !important;
+}
+
+/* Ensure icons are properly displayed */
+.btn-clear i,
+.filter-btn i {
+	display: inline-block !important;
+	font-style: normal !important;
+	font-variant: normal !important;
+	text-rendering: auto !important;
+	line-height: 1 !important;
+}

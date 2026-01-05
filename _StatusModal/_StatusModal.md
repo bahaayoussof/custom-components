@@ -87,6 +87,16 @@ showStatusModal({
 }
 ```
 
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| type | string | The type of the modal | 'success' |
+| title | string | The title of the modal | 'empty string' |
+| message | string | The message of the modal | 'empty string' |
+| showActionButton | boolean | Whether to show the action button or not | false |
+| actionButtonText | string | The text of the action button | 'تأكيد' |
+| onConfirm | function | The callback function when the confirm button is clicked | null |
+| onCancel | function | The callback function when the cancel button is clicked | null |
+
 ## Screenshots
 ![alt text](success.png)
 

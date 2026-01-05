@@ -26,3 +26,9 @@ var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص �
 <partial name="_TextAreaField" model='("عنصر غير مطلوب بقيمة توضيحيه افتراضية", false, "my-custom-id-2", "")' />
 ```
 
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Label | string | The label of the input field | "" |
+| Required | bool | Whether the input field is required or not | false |
+| Id | string | The ID of the input field | "" |
+| Placeholder | string | The placeholder of the input field | "" |

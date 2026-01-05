@@ -46,3 +46,7 @@ define breadcrumb list:
 
 <partial name="_Breadcrumb" model="breadcrumb" />
 ```
+
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Model | List<(string Name, string Url)> | The breadcrumb list | [] |

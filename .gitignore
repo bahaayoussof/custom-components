@@ -1,0 +1,4 @@
+UI/*
+# ignore all folders except the ones that start with _
+!UI/_*
+!momah-table

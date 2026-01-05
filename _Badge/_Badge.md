@@ -45,8 +45,6 @@ radius = 4
 <partial name="_CustomBadge" model='("#026b66", "#f2f2f2", "عاجل", false, 3)' />
 ```
 
-<!-- make table of parameters with default values if found -->
-
 | Parameter | Type | Description | Default Value |
 | --- | --- | --- | --- |
 | Color | string | The color of the badge | "" |

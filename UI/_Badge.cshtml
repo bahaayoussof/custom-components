@@ -1,0 +1,19 @@
+@model object
+@{
+var (Color, BgColor, Content, Dot, Radius) = Model switch
+{
+(string c, string b, string t, bool d, int r) => (c, b, t, d, r),
+(string c, string b, string t, bool d) => (c, b, t, d, 4),
+(string c, string b, string t) => (c, b, t, true, 4),
+_ => throw new ArgumentException("Invalid model type provided to _CustomBadge")
+};
+}
+
+<span class="badge d-flex align-items-center gap-2 px-3 py-2 rounded-@Radius"
+	style="background-color: @BgColor; color: @Color; font-size: 14px; width: fit-content;">
+	@if (Dot)
+	{
+	<span style="width: 10px; height: 10px; background-color: @Color; border-radius: 50%;"></span>
+	}
+	@Content
+</span>

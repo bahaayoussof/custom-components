@@ -105,11 +105,10 @@ DateType = "ummalqura";
 
 ```
 
-### Parameters
-
-- `Label`: The label of the input field.
-- `Required`: Whether the input field is required or not.
-- `Id`: The ID of the input field.
-- `Placeholder`: The placeholder of the input field.
-- `DateType`: The type of the date ("gregorian" or "ummalqura").
-
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Label | string | The label of the input field | "" |
+| Required | bool | Whether the input field is required or not | false |
+| Id | string | The ID of the input field | "" |
+| Placeholder | string | The placeholder of the input field | "" |
+| DateType | string | The type of the date ("gregorian" or "ummalqura") | "ummalqura" |

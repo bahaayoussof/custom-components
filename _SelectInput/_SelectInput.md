@@ -40,3 +40,11 @@ var selectFieldOptions = new List<(string Value, string Text)>
 <partial name="_SelectInput" model='("عنصر غير مطلوب", false, "my-custom-id-2", "عنصر غير مطلوب", selectFieldOptions)' />
 
 ```
+
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Label | string | The label of the input field | "" |
+| Required | bool | Whether the input field is required or not | false |
+| Id | string | The ID of the input field | "" |
+| DefaultOptionText | string | The default option text of the select field | "" |
+| Options | List<(string Value, string Text)> | The options of the select field | [] |

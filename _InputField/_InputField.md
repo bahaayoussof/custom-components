@@ -54,3 +54,12 @@ type = "text";
 <partial name="_InputField" model='("حقل نوع نص", true, "textid", " نص تجريبي")' />
 <partial name="_InputField" model='("البريد الإلكتروني", true, "email", " البريد الإلكتروني", "email")' />
 ```
+
+
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Label | string | The label of the input field | "" |
+| Required | bool | Whether the input field is required or not | false |
+| Id | string | The ID of the input field | "" |
+| Placeholder | string | The placeholder of the input field | "" |
+| Type | string | The type of the input field | "text" |
