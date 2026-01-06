@@ -86,7 +86,7 @@
 ### How to use
 
 ```cshtml
-<partial name="_FileUpload" model='("اسم العنصر", true, "my-upload-1")' />
+<partial name="_FileUpload" model='("اسم العنصر", true, "my-upload-1", 2)' />
 <partial name="_FileUpload" model='(" العنصر", false, "my-upload-2")' />
 
 <script>
@@ -112,3 +112,4 @@ function submitForm() {
 | Label | string | The label of the input field | "" |
 | Required | bool | Whether the input field is required or not | false |
 | Id | string | The ID of the input field | "" |
+| MaxFiles | int | The maximum number of files that can be uploaded | null |
