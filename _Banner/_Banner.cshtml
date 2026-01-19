@@ -1,0 +1,83 @@
+@model (string? Icon, string Title, string Content, string? TitleColor, bool IsSmall)
+
+@{
+var titleColor = !string.IsNullOrWhiteSpace(Model.TitleColor) ? Model.TitleColor : "#1F2937";
+var contentClass = Model.IsSmall ? "small" : "";
+}
+
+<style>
+	.info-banner {
+		background: #00A79D0D;
+		border: 1px solid #CCFBF1;
+		border-radius: 12px;
+		padding: 1.5rem;
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		color: var(--banner-title-color, #1F2937);
+	}
+
+	.info-banner h6 {
+		color: var(--banner-title-color, #1F2937) !important;
+	}
+
+	.palm-bg {
+		position: absolute;
+		left: 0;
+		height: 100%;
+		pointer-events: none;
+	}
+
+	.banner-icon-wrapper {
+		width: 44px;
+		height: 44px;
+		background: #E0F2F1;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #00A79D;
+		font-size: 1.2rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.banner-icon-wrapper img {
+		width: 24px;
+		height: 24px;
+		object-fit: contain;
+	}
+
+	.banner-content-wrapper {
+		position: relative;
+		z-index: 1;
+	}
+
+	.info-banner-content {
+		font-weight: 500;
+	}
+</style>
+
+<div class="info-banner mb-3" style="--banner-title-color: @titleColor;">
+	<img src="~/assets/images/palm.svg" class="palm-bg" />
+	<div class="d-flex align-items-center gap-3">
+		@if (!string.IsNullOrEmpty(Model.Icon))
+		{
+		<div class="banner-icon-wrapper">
+			@if (Model.Icon.Trim().StartsWith("<")) { var iconHtml=Model.Icon; if (iconHtml.Contains("~/")) {
+				iconHtml=iconHtml.Replace("~/", Url.Content("~/")); } @Html.Raw(iconHtml) } else { <i class="bi @Model.Icon">
+				</i>
+				}
+		</div>
+		}
+		<div class="banner-content-wrapper">
+			@if (!string.IsNullOrEmpty(Model.Title))
+			{
+			<h6 class="fw-bold mb-1">@Model.Title</h6>
+			}
+			<div class="info-banner-content text-muted @contentClass">@Model.Content</div>
+		</div>
+	</div>
+</div>
