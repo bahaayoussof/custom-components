@@ -5,9 +5,14 @@ var label = (string)Model[0];
 var required = (bool)Model[1];
 var id = (string)Model[2];
 int? maxFiles = null;
+string[] allowedFileTypes = null;
 if (Model.Length > 3)
 {
 maxFiles = (int)Model[3];
+}
+if (Model.Length > 4)
+{
+allowedFileTypes = (string[])Model[4];
 }
 }
 
@@ -37,10 +42,11 @@ maxFiles = (int)Model[3];
 					</span>
 				</header>
 				<p class="text-center text-dark-grey mb-0">الحد الأقصى لحجم الملف المسموح به هو
-					2 ميجابايت، وصيغ الملفات المدعومة تشمل .jpg و .png و .pdf.</p>
+					2 ميجابايت@(allowedFileTypes != null && allowedFileTypes.Any() ? "، وصيغ الملفات المدعومة تشمل " +
+					string.Join(" , ", allowedFileTypes.Select(t => t.Split('/')[1].ToUpper())) : "").</p>
 
 				<!-- if used inside form consider add type="button" to avoid submitting the form behavior -->
-				<button type="button" class="btn btn-outline-dark file-input-button mt-3">
+				<button type="button" class="btn btn-outline-secondary file-input-button mt-3">
 					تصفح الملفات
 
 					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +70,7 @@ maxFiles = (int)Model[3];
 					حجم الملف يجب أن يكون أقل من 5 ميجا بايت
 				</p>
 				<p class="text-center text-sm hidden text-danger mt-3 mb-0 filetype-error">
-					الملف يجب أن يكون بصيغة PDF أو PNG أو JPG
+					الملف يجب أن يكون بإحدى الصيغ المدعومة
 				</p>
 				<p class="text-center text-sm hidden text-danger mt-3 mb-0 required-error">
 					هذا الحقل مطلوب
@@ -85,7 +91,7 @@ maxFiles = (int)Model[3];
 
 <script>
 	if (typeof window.initDragDropUpload === 'undefined') {
-		window.initDragDropUpload = function (containerId, maxFiles) {
+		window.initDragDropUpload = function (containerId, maxFiles, allowedFileTypes) {
 			const container = document.getElementById(containerId);
 			if (!container) return null;
 
@@ -231,8 +237,8 @@ maxFiles = (int)Model[3];
 						filetypeErrorMessage.classList.add("hidden");
 					} else {
 						filesizeErrorMessage.classList.add("hidden");
-						const fileTypes = ["application/pdf", "image/png", "image/jpg", "image/jpeg"]
-						if (fileTypes.includes(file.type)) {
+						const fileTypes = allowedFileTypes;
+						if (!fileTypes || fileTypes.length === 0 || fileTypes.includes(file.type)) {
 							filetypeErrorMessage.classList.add("hidden");
 
 							let newDocument = document.createElement("li");
@@ -273,6 +279,6 @@ maxFiles = (int)Model[3];
 <script>
 	(function () {
 		window.fileUploads = window.fileUploads || {};
-		window.fileUploads["@id"] = initDragDropUpload("@id", @(maxFiles.HasValue ? maxFiles.Value : "null"));
+		window.fileUploads["@id"] = initDragDropUpload("@id", @(maxFiles.HasValue ? maxFiles.Value : "null"), @(allowedFileTypes != null ? Html.Raw(Json.Serialize(allowedFileTypes)) : "null"));
 	})();
 </script>
