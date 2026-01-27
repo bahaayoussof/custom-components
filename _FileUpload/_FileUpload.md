@@ -53,3 +53,4 @@ The model is a `ValueTuple` requiring specific order.
 | **3** | `Id` | `string` | **Unique** identifier for this uploader instance. Used for JS access. | `"user-docs-1"` |
 | **4** | `MaxFiles` | `int?` | (Optional) Maximum number of files allowed. | `1` (single mode) or `5` (limit) |
 | **5** | `AllowedFileTypes` | `string[]` | (Optional) Array of allowed MIME types. Null allows all. | `new[] { "application/pdf" }` |
+| **6** | `MaxFileSize` | `double` | (Optional) Maximum file size in MB. Default is 5 MB. | `10` or `2.5` |
