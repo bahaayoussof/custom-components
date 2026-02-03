@@ -168,8 +168,6 @@ DateType = "ummalqura";
 	.was-validated .form-control:invalid {
 		background-image: none !important;
 	}
-
-
 </style>
 
 <div class="mb-3">
@@ -184,7 +182,8 @@ DateType = "ummalqura";
 		<input type="text" class="form-control @(Required ? " required-field" : "" )" id="@Id" name="@Id"
 			placeholder="@Placeholder" readonly="readonly" @(Required ? "required data-required='true'" : "" )
 			style="padding-left: 35px;">
-		<span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 2;">
+		<span id="@Id-icon"
+			style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 2;">
 			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path
 					d="M6.66536 9.99935C6.20513 9.99935 5.83203 10.3724 5.83203 10.8327C5.83203 11.2929 6.20513 11.666 6.66536 11.666H6.67284C7.13308 11.666 7.50618 11.2929 7.50618 10.8327C7.50618 10.3724 7.13308 9.99935 6.67284 9.99935H6.66536Z"
@@ -269,12 +268,23 @@ DateType = "ummalqura";
 					// Update calendar icon color
 					updateCalendarIconColor($el);
 
+					// Trigger custom callback if defined
+					var onSelectFn = '@OnSelect';
+					if (onSelectFn && typeof window[onSelectFn] === 'function') {
+						window[onSelectFn](dateStrings, '@Id');
+					}
+
 					$(this).trigger("change");
 					// Trigger parsley validation if present
 					if (typeof $(this).parsley === 'function') {
 						$(this).parsley().reset();
 					}
 				}
+			});
+
+			// Bind click event to the icon to show the calendar
+			$("#@Id-icon").off("click").on("click", function () {
+				$el.calendarsPicker('show');
 			});
 		}
 
