@@ -1,6 +1,7 @@
 # _FileUpload Component
 
 ![_FileUpload](file-upload.png)
+![alt text](image.png)
 
 A reusable file upload component that supports drag-and-drop, client-side validation (file size, type, max count), and managing a list of uploaded files.
 
@@ -17,6 +18,10 @@ Use the `partial` tag to include the component in your Razor view.
 <!-- Full usage with constraints -->
 <partial name="UI/_FileUpload/_FileUpload"
          model='("Profile Picture", true, "avatar-uploader", 1, new string[] { "image/png", "image/jpeg" })' />
+
+<!-- Full usage with all parameters -->
+<partial name="UI/_FileUpload/_FileUpload" model='(@Label, @Required, @Id, @MaxFiles, @AllowedFileTypes, @MaxFileSize)' />
+
 ```
 
 ### 2. Handle Files via JavaScript
