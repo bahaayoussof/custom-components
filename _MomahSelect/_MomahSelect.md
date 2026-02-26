@@ -18,13 +18,13 @@ The component accepts properties ideally via an `anonymous object`. It also prov
 | `Options` | `List<(string Value, string Text)>`| `null` | The list of options to display in the dropdown. |
 | `Label` | `string` | `""` | The label text displayed above the input. If empty, the `<label>` element is omitted. |
 | `Required`| `bool` | `false` | Marks the input as required. Displays a `*` next to the label and enables validation logic. |
-| `DefaultOptionText`| `string` | `""` | The placeholder text to display when no option is chosen. |
+| `Placeholder`| `string` | `""` | The placeholder text to display when no option is chosen. |
 | `Type` | `string` | `"single"` | Determines the selection mode. Accepts `"single"` or `"multiple"`. |
 | `Filter` | `string` | `null` | Enables the search/filter input. Any non-null value activates it. *Note: Multi-select ALWAYS has search enabled.*|
 | `Clear` | `string` | `null` | Enables a clear ('✕') button upon selection. Any non-null value enables it. |
 | `OnChange`| `string` | `null` | The name of a global JavaScript function to call when the selection changes. Receives `(selectedValue, id)`. |
 
-*(Note: If passing a Tuple instead of an anonymous object, use this exact order: `(Label, Required, Id, DefaultOptionText, Options, Type, Filter, Clear, OnChange)`)*
+*(Note: If passing a Tuple instead of an anonymous object, use this exact order: `(Label, Required, Id, Placeholder, Options, Type, Filter, Clear, OnChange)`)*
 
 ---
 
@@ -39,7 +39,7 @@ A standard single-select dropdown without search or clearing.
     Id = "UserRole",
     Label = "Select Role",
     Required = true,
-    DefaultOptionText = "Choose a role...",
+    Placeholder = "Choose a role...",
     Options = new List<(string, string)>
     {
         ("1", "Admin"),
@@ -58,7 +58,7 @@ Use `Type = "multiple"` to show a multiple layout with checkboxes and tag chips.
     Id = "AssignedServices",
     Label = "Assign Services",
     Required = false,
-    DefaultOptionText = "Select services",
+    Placeholder = "Select services",
     Type = "multiple",
     Clear = "true", // Allows clearing the entire selection
     Options = new List<(string, string)>
@@ -71,7 +71,7 @@ Use `Type = "multiple"` to show a multiple layout with checkboxes and tag chips.
 <!-- or -->
 
 <partial name="UI/_MomahSelect"
-	model='new { Label = "multi select + filter", Required = false, Id = "my-multi-select-2", DefaultOptionText = "multi select مع فلتر", Options = selectFieldOptions, Type = "multiple", Filter = "filter", Clear = "clear" }' />
+	model='new { Label = "multi select + filter", Required = false, Id = "my-multi-select-2", Placeholder = "multi select مع فلتر", Options = selectFieldOptions, Type = "multiple", Filter = "filter", Clear = "clear" }' />
 
 ```
 
@@ -83,7 +83,7 @@ Activating the search bar for a single selection and reacting via a Javascript c
 {
     Id = "CitySelect",
     Label = "City",
-    DefaultOptionText = "Search city...",
+    Placeholder = "Search city...",
     Filter = "true",
     OnChange = "onCityChanged",
     Options = new List<(string, string)>

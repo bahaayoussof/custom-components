@@ -5,7 +5,7 @@
     string Label = "";
     bool Required = false;
     string Id = "";
-    string DefaultOptionText = "";
+    string Placeholder = "";
     List<(string Value, string Text)> Options = null;
     string Type = "single";
     string Filter = null;
@@ -17,7 +17,7 @@
         Label             = tuple[0]?.ToString();
         Required          = (bool)tuple[1];
         Id                = tuple[2]?.ToString();
-        DefaultOptionText = tuple[3]?.ToString();
+        Placeholder = tuple[3]?.ToString();
         Options           = (List<(string Value, string Text)>)tuple[4];
         Type              = tuple.Length > 5 ? tuple[5]?.ToString() : "single";
         Filter            = tuple.Length > 6 ? tuple[6]?.ToString() : null;
@@ -30,7 +30,7 @@
         if (props.TryGetValue("Label", out var label)) Label = label?.ToString();
         if (props.TryGetValue("Required", out var req)) Required = Convert.ToBoolean(req);
         if (props.TryGetValue("Id", out var id)) Id = id?.ToString();
-        if (props.TryGetValue("DefaultOptionText", out var defText)) DefaultOptionText = defText?.ToString();
+        if (props.TryGetValue("Placeholder", out var defText)) Placeholder = defText?.ToString();
         if (props.TryGetValue("Options", out var opts)) Options = opts as List<(string Value, string Text)>;
         if (props.TryGetValue("Type", out var type)) Type = type?.ToString() ?? "single";
         if (props.TryGetValue("Filter", out var filter)) Filter = filter?.ToString();
@@ -183,7 +183,7 @@
         </label>
     }
 
-    <div class="select-input-wrapper" id="@Id-wrapper" data-placeholder="@DefaultOptionText">
+    <div class="select-input-wrapper" id="@Id-wrapper" data-placeholder="@Placeholder">
 
         <!-- Hidden native select for form submission -->
         <select name="@Id" id="@Id" class="cs-native-select"
@@ -191,7 +191,7 @@
                 @(Required ? "required" : "")>
             @if (!isMultiple)
             {
-                <option value="">@DefaultOptionText</option>
+                <option value="">@Placeholder</option>
             }
             @if (Options != null)
             {
@@ -208,12 +208,12 @@
                 @if (isMultiple)
                 {
                     <div class="ms-chips" id="@Id-chips">
-                        <span class="ms-placeholder-text">@DefaultOptionText</span>
+                        <span class="ms-placeholder-text">@Placeholder</span>
                     </div>
                 }
                 else
                 {
-                    <span class="ss-display-text ss-placeholder" id="@Id-display">@DefaultOptionText</span>
+                    <span class="ss-display-text ss-placeholder" id="@Id-display">@Placeholder</span>
                 }
                 @if (!string.IsNullOrEmpty(Clear))
                 {
