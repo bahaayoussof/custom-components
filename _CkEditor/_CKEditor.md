@@ -1,5 +1,5 @@
 # CKEditor Partial Documentation
-![_CKEditor](CKEditor.png)
+![_CKEditor](ckEditor.png)
 
 The `_CKEditor.cshtml` is a reusable partial view that integrates CKEditor 5 (Classic Build) into any Razor page with built-in validation, dynamic sizing, and automatic data synchronization.
 
