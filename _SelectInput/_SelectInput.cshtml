@@ -1,6 +1,6 @@
 @model (string Label, bool Required, string Id, string DefaultOptionText, List<(string Value, string Text)> Options)
 
-	<div class="my-3">
+	<div class="@(string.IsNullOrWhiteSpace(Model.Label) ? "mt-3" : "")">
 		<label class="form-label text-gray-700" for="@Model.Id">
 			@if (Model.Required)
 			{
