@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Routing
+@model dynamic
+@{
+    string Color = "";
+    string BgColor = "";
+    string Content = "";
+    bool Dot = true;
+    int Radius = 4;
+    string? Icon = null;
+    string? Fs = "12px";
+    string? Fw = null;
+
+    if (Model != null)
+    {
+        var props = new RouteValueDictionary(Model);
+
+        if (props.TryGetValue("labelColor", out var cProp)) Color = cProp?.ToString() ?? "";
+        if (props.TryGetValue("bgColor", out var bProp)) BgColor = bProp?.ToString() ?? "";
+        if (props.TryGetValue("label", out var tProp)) Content = tProp?.ToString() ?? "";
+        if (props.TryGetValue("dot", out var dProp) && dProp != null)
+        {
+            if (bool.TryParse(dProp.ToString(), out bool dVal)) Dot = dVal;
+        }
+        if (props.TryGetValue("radius", out var rProp) && rProp != null)
+        {
+            if (int.TryParse(rProp.ToString(), out int rVal)) Radius = rVal;
+        }
+        if (props.TryGetValue("icon", out var icProp)) Icon = icProp?.ToString();
+
+        if (props.TryGetValue("style", out var styleProp) && styleProp != null)
+        {
+            var styleDict = new RouteValueDictionary(styleProp);
+            if (styleDict.TryGetValue("fs", out var fsProp) && fsProp != null)
+                Fs = fsProp.ToString();
+            if (styleDict.TryGetValue("fw", out var fwProp) && fwProp != null)
+                Fw = fwProp.ToString();
+        }
+    }
+
+    var fontWeight = !string.IsNullOrEmpty(Fw) ? $"font-weight: {Fw};" : "";
+    var fontSize = !string.IsNullOrEmpty(Fs) ? $"font-size: {Fs};" : "font-size: 12px;";
+}
+
+<span class="badge d-flex align-items-center gap-2 px-3 py-2 rounded-@Radius"
+      style="background-color: @BgColor; color: @Color; @fontSize @fontWeight width: fit-content;">
+    @if (Dot)
+    {
+        <span style="width: 10px; height: 10px; background-color: @Color; border-radius: 50%;"></span>
+    }
+    @Content
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        @Html.Raw(Icon)
+    }
+</span>
