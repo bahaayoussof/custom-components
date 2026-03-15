@@ -5,8 +5,22 @@
 .momah-table-host .jtable-main-container {
 	border: 1px solid #e5e7eb;
 	border-radius: 12px;
-	overflow: hidden;
+	overflow: visible;
 	background: #fff;
+}
+
+/* Round top corners directly on the first header cells (since overflow is now visible) */
+.momah-table-host .table thead tr:first-child th:first-child {
+	border-top-right-radius: 11px;
+}
+
+.momah-table-host .table thead tr:first-child th:last-child {
+	border-top-left-radius: 11px;
+}
+
+/* Allow Bootstrap dropdowns to overflow the responsive container freely */
+.momah-table-host .table-responsive {
+	overflow: visible !important;
 }
 
 table thead th {
