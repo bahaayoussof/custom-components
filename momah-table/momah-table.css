@@ -1,8 +1,8 @@
 /* this file contains data table styles and action button with dropdown */
 
 /* Table look */
-#ListData .table-wrapper,
-#ListData .jtable-main-container {
+.momah-table-host .table-wrapper,
+.momah-table-host .jtable-main-container {
 	border: 1px solid #e5e7eb;
 	border-radius: 12px;
 	overflow: hidden;
@@ -14,36 +14,36 @@ table thead th {
 }
 
 /* Header background */
-#ListData .table thead,
-#ListData .table thead tr,
-#ListData .table thead th,
-#ListData .jtable thead,
-#ListData .jtable thead tr,
-#ListData .jtable thead th {
+.momah-table-host .table thead,
+.momah-table-host .table thead tr,
+.momah-table-host .table thead th,
+.momah-table-host .jtable thead,
+.momah-table-host .jtable thead tr,
+.momah-table-host .jtable thead th {
 	background-color: #f5f7f9 !important;
 }
 
 /* Bootstrap table var */
-#ListData .table thead {
+.momah-table-host .table thead {
 	--bs-table-bg: #f5f7f9 !important;
 }
 
 /* Header cells */
-#ListData .table thead th,
-#ListData .jtable thead th {
+.momah-table-host .table thead th,
+.momah-table-host .jtable thead th {
 	color: #6c757d !important;
 	font-weight: 500;
 	padding: 12px 16px !important;
 }
 
 /* Body cells */
-#ListData .table tbody td,
-#ListData .jtable tbody td {
+.momah-table-host .table tbody td,
+.momah-table-host .jtable tbody td {
 	vertical-align: middle;
 	padding: 12px 16px !important;
 }
 
-#ListData .wrappingText {
+.momah-table-host .wrappingText {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -119,22 +119,26 @@ table thead th {
 }
 
 /* Role chips inside roles column */
-#ListData .roles-cell {
+.momah-table-host .roles-cell {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 6px;
 }
 
-#ListData .role-chip {
+.momah-table-host .role-chip {
 	display: inline-flex;
 	align-items: center;
 	padding: 2px 8px;
 	border-radius: 6px;
 	background: #f3f4f6e4;
-	/* border: 1px solid #e5e7eb; */
 	color: #374151;
 	font-size: 12px;
 	line-height: 1.2;
+}
+
+/* MomahTable Host Containers */
+.momah-actions-host {
+	margin-bottom: 1rem;
 }
 
 /* MomahTable Search Bar */
@@ -228,4 +232,93 @@ table thead th {
 	font-variant: normal !important;
 	text-rendering: auto !important;
 	line-height: 1 !important;
+}
+
+/* Columns Dropdown */
+.momah-cols-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.momah-cols-menu {
+	display: none;
+	position: absolute;
+	left: 0;
+	/* Default to left alignment (LTR) - user can override or we can detect RTL */
+	top: 100%;
+	z-index: 1000;
+	min-width: 200px;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	padding: 8px;
+	margin-top: 4px;
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+/* RTL Support for dropdown alignment if needed, usually driven by HTML dir="rtl" */
+[dir="rtl"] .momah-cols-menu {
+	left: auto;
+	right: 0;
+}
+
+.momah-cols-menu.show {
+	display: block;
+}
+
+.momah-col-item {
+	display: flex;
+	align-items: center;
+	padding: 8px 12px;
+	cursor: pointer;
+	border-radius: 6px;
+	transition: background-color 0.2s;
+	margin-bottom: 2px;
+}
+
+.momah-col-item:hover {
+	background-color: #f3f4f6;
+}
+
+.momah-col-checkbox {
+	margin-inline-end: 10px;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	accent-color: #016b68;
+}
+
+.momah-col-label {
+	font-size: 14px;
+	color: #374151;
+	user-select: none;
+	flex-grow: 1;
+}
+
+.momah-cols-btn {
+	background-color: #fff;
+	color: #374151;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	padding: 9px 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s;
+}
+
+.momah-cols-btn:hover {
+	background-color: #f9fafb;
+	border-color: #9ca3af;
+}
+
+/* Rotate arrow when dropdown is open */
+.momah-cols-btn[aria-expanded="true"] .momah-arrow-icon {
+	transform: rotate(180deg);
+}
+
+.momah-arrow-icon {
+	transition: transform 0.3s ease-in-out;
 }

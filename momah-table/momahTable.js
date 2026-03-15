@@ -98,20 +98,24 @@
 		return container;
 	}
 
-	function renderTableActions(searchOptions, filterOptions) {
-		// Only return if both are missing
-		if (!searchOptions && !filterOptions) return;
+	function renderTableActions(searchOptions, filterOptions, columnOptions) {
+		// Only return if all are missing
+		if (!searchOptions && !filterOptions && !columnOptions) return;
 
 		// Use the correct containerSelector
 		var hostSelector =
 			(searchOptions && searchOptions.containerSelector) ||
-			(filterOptions && filterOptions.containerSelector);
+			(filterOptions && filterOptions.containerSelector) ||
+			(columnOptions && columnOptions.containerSelector);
 		if (!hostSelector) return;
 		var host =
 			typeof hostSelector === "string"
 				? document.querySelector(hostSelector)
 				: hostSelector;
 		if (!host) return;
+
+		// Add generic class for styling
+		host.classList.add("momah-actions-host");
 
 		var wrapper = createElement("div", "d-flex align-items-center gap-2");
 
@@ -135,12 +139,12 @@
 			let searchHtml = `
         <input type="text" id="${inputId}" class="form-control search-input momah-search-input" placeholder="${placeholder || ""
 				}"/>
-        <button type="button" class="btn-clear momah-btn-clear position-absolute" onclick="clearSearchInput()" aria-label="Clear search input">
+        <button type="button" class="btn-clear momah-btn-clear position-absolute" aria-label="Clear search input">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M0.183058 0.183058C0.427136 -0.0610194 0.822864 -0.0610194 1.06694 0.183058L6.45833 5.57445L11.8497 0.183058C12.0938 -0.0610194 12.4895 -0.0610194 12.7336 0.183058C12.9777 0.427136 12.9777 0.822864 12.7336 1.06694L7.34222 6.45833L12.7336 11.8497C12.9777 12.0938 12.9777 12.4895 12.7336 12.7336C12.4895 12.9777 12.0938 12.9777 11.8497 12.7336L6.45833 7.34222L1.06694 12.7336C0.822864 12.9777 0.427136 12.9777 0.183058 12.7336C-0.0610194 12.4895 -0.0610194 12.0938 0.183058 11.8497L5.57445 6.45833L0.183058 1.06694C-0.0610194 0.822864 -0.0610194 0.427136 0.183058 0.183058Z" fill="#161616"/>
 					</svg>
         </button>
-        <div class="search-icon-text momah-search-icon position-absolute d-flex align-items-center" onclick="performSearch()" role="button" tabindex="0" aria-label="Search">
+        <div class="search-icon-text momah-search-icon position-absolute d-flex align-items-center" role="button" tabindex="0" aria-label="Search">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="momah-search-icon-svg">
             <path
               d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z"
@@ -176,11 +180,20 @@
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M3.93213 1.58e-06C3.94946 2.35486e-06 3.96686 3.12972e-06 3.98431 3.12972e-06L15.5678 1.58e-06C16.3384 -3.38252e-05 16.9926 -6.38664e-05 17.5087 0.0703036C18.0549 0.144785 18.5773 0.312914 18.9772 0.753097C19.3806 1.19714 19.491 1.73226 19.4994 2.27927C19.5073 2.79013 19.4257 3.42472 19.3305 4.16461L19.3235 4.2185C19.2899 4.48033 19.2393 4.73356 19.134 4.98711C19.0271 5.24453 18.8798 5.46377 18.6964 5.68165C17.7167 6.84554 15.8954 8.9489 13.3314 10.8644C13.29 10.8954 13.2376 10.9688 13.2276 11.079C12.9785 13.8319 12.7594 15.2885 12.6013 16.1323C12.4303 17.0448 11.7343 17.6764 11.1341 18.1112C10.8201 18.3388 10.4867 18.5437 10.1898 18.7244C10.166 18.7389 10.1425 18.7532 10.1193 18.7673C9.84191 18.936 9.6061 19.0794 9.409 19.2187C8.86849 19.6009 8.24491 19.5741 7.76827 19.2964C7.31847 19.0344 7.00196 18.5565 6.93796 18.016C6.7975 16.8296 6.54286 14.5069 6.26176 11.0726C6.25274 10.9624 6.23553 10.9305 6.2341 10.9278C6.23311 10.9259 6.23058 10.9213 6.22219 10.9121C6.2128 10.9017 6.19403 10.8835 6.15835 10.8568C3.59952 8.94368 1.78182 6.844 0.803507 5.68162C0.620802 5.46453 0.46921 5.25051 0.361123 4.99022C0.255311 4.73541 0.210192 4.48089 0.17644 4.21849C0.174121 4.20047 0.171809 4.18251 0.169505 4.1646C0.0742886 3.42472 -0.00737744 2.79013 0.000530313 2.27927C0.00899769 1.73226 0.119419 1.19714 0.522804 0.753097C0.922685 0.312914 1.44502 0.144785 1.9913 0.0703036C2.50741 -6.38664e-05 3.16157 -3.38252e-05 3.93213 1.58e-06ZM2.19394 1.55655C1.80984 1.60892 1.69414 1.69449 1.63307 1.76171C1.57551 1.82507 1.50601 1.93665 1.50035 2.30249C1.49432 2.69212 1.56012 3.21812 1.66418 4.02712C1.693 4.25193 1.71843 4.34754 1.74643 4.41496C1.77215 4.47691 1.81773 4.55722 1.95114 4.71572C2.90942 5.85431 4.63846 7.84756 7.05654 9.65542C7.25081 9.80066 7.42905 9.98047 7.558 10.2226C7.68505 10.4612 7.73704 10.7094 7.75676 10.9502C8.03632 14.3658 8.28914 16.6704 8.42756 17.8396C8.43178 17.8753 8.44476 17.9104 8.46474 17.9411C8.48518 17.9724 8.50789 17.9913 8.52333 18.0003C8.5253 18.0015 8.52703 18.0024 8.52851 18.0031C8.53207 18.0012 8.53688 17.9983 8.54298 17.994C8.78509 17.8228 9.0661 17.652 9.33133 17.4909C9.35774 17.4748 9.38398 17.4589 9.41002 17.443C9.70883 17.2612 9.99461 17.0845 10.254 16.8966C10.8008 16.5003 11.069 16.1651 11.1269 15.8561C11.2734 15.0743 11.4872 13.6681 11.7337 10.9438C11.7789 10.4447 12.024 9.9688 12.4337 9.66271C14.8567 7.85253 16.5892 5.85571 17.5488 4.7157C17.6652 4.57745 17.7169 4.48831 17.7488 4.4116C17.7823 4.33102 17.8104 4.2244 17.8358 4.02712C17.9399 3.21812 18.0057 2.69212 17.9996 2.30249C17.994 1.93665 17.9245 1.82507 17.8669 1.76171C17.8058 1.69449 17.6901 1.60892 17.306 1.55655C16.9034 1.50165 16.3527 1.5 15.5157 1.5H3.98431C3.14726 1.5 2.5966 1.50165 2.19394 1.55655ZM8.52065 18.0066C8.52069 18.0066 8.52118 18.0064 8.52211 18.0062L8.52065 18.0066Z" fill="#161616"/>
 					</svg>`;
 
+			const onlyFilterIcon = `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M4 0.5H36C37.933 0.5 39.5 2.067 39.5 4V36C39.5 37.933 37.933 39.5 36 39.5H4C2.067 39.5 0.5 37.933 0.5 36V4C0.500001 2.067 2.067 0.5 4 0.5Z" stroke="#D2D6DB"/>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M25.75 13.2545V11C25.75 10.5858 25.4142 10.25 25 10.25C24.5858 10.25 24.25 10.5858 24.25 11V13.2545C24.1074 13.2575 23.9758 13.2625 23.8546 13.2708C23.5375 13.2924 23.238 13.339 22.9476 13.4593C22.2738 13.7384 21.7384 14.2738 21.4593 14.9476C21.339 15.238 21.2924 15.5375 21.2708 15.8546C21.25 16.1592 21.25 16.5302 21.25 16.9747V17.0253C21.25 17.4697 21.25 17.8408 21.2708 18.1454C21.2924 18.4625 21.339 18.762 21.4593 19.0524C21.7384 19.7262 22.2738 20.2616 22.9476 20.5407C23.238 20.661 23.5375 20.7076 23.8546 20.7292C24.1592 20.75 24.5303 20.75 24.9747 20.75H25.0253C25.4697 20.75 25.8408 20.75 26.1454 20.7292C26.4625 20.7076 26.762 20.661 27.0524 20.5407C27.7262 20.2616 28.2616 19.7262 28.5407 19.0524C28.661 18.762 28.7076 18.4625 28.7292 18.1454C28.75 17.8408 28.75 17.4698 28.75 17.0253V16.9747C28.75 16.5303 28.75 16.1592 28.7292 15.8546C28.7076 15.5375 28.661 15.238 28.5407 14.9476C28.2616 14.2738 27.7262 13.7384 27.0524 13.4593C26.762 13.339 26.4625 13.2924 26.1454 13.2708C26.0242 13.2625 25.8926 13.2575 25.75 13.2545ZM23.5216 14.8452C23.5988 14.8132 23.716 14.7837 23.9567 14.7673C24.2042 14.7504 24.5238 14.75 25 14.75C25.4762 14.75 25.7958 14.7504 26.0433 14.7673C26.284 14.7837 26.4012 14.8132 26.4784 14.8452C26.7846 14.972 27.028 15.2154 27.1549 15.5216C27.1868 15.5988 27.2163 15.716 27.2327 15.9567C27.2496 16.2042 27.25 16.5238 27.25 17C27.25 17.4762 27.2496 17.7958 27.2327 18.0433C27.2163 18.284 27.1868 18.4012 27.1549 18.4784C27.028 18.7846 26.7846 19.028 26.4784 19.1549C26.4012 19.1868 26.284 19.2163 26.0433 19.2327C25.7958 19.2496 25.4762 19.25 25 19.25C24.5238 19.25 24.2042 19.2496 23.9567 19.2327C23.716 19.2163 23.5988 19.1868 23.5216 19.1549C23.2154 19.028 22.972 18.7846 22.8452 18.4784C22.8132 18.4012 22.7837 18.284 22.7673 18.0433C22.7504 17.7958 22.75 17.4762 22.75 17C22.75 16.5238 22.7504 16.2042 22.7673 15.9567C22.7837 15.716 22.8132 15.5988 22.8452 15.5216C22.972 15.2154 23.2154 14.972 23.5216 14.8452Z" fill="#161616"/>
+							<path d="M24.25 29C24.25 29.4142 24.5858 29.75 25 29.75C25.4142 29.75 25.75 29.4142 25.75 29V23C25.75 22.5858 25.4142 22.25 25 22.25C24.5858 22.25 24.25 22.5858 24.25 23V29Z" fill="#161616"/>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M14.25 29C14.25 29.4142 14.5858 29.75 15 29.75C15.4142 29.75 15.75 29.4142 15.75 29V26.7455C15.8926 26.7425 16.0242 26.7375 16.1454 26.7292C16.4625 26.7076 16.762 26.661 17.0524 26.5407C17.7262 26.2616 18.2616 25.7262 18.5407 25.0524C18.661 24.762 18.7076 24.4625 18.7292 24.1454C18.75 23.8408 18.75 23.4697 18.75 23.0253V22.9747C18.75 22.5303 18.75 22.1592 18.7292 21.8546C18.7076 21.5375 18.661 21.238 18.5407 20.9476C18.2616 20.2738 17.7262 19.7384 17.0524 19.4593C16.762 19.339 16.4625 19.2924 16.1454 19.2708C15.8408 19.25 15.4698 19.25 15.0253 19.25H14.9748C14.5303 19.25 14.1592 19.25 13.8546 19.2708C13.5375 19.2924 13.238 19.339 12.9476 19.4593C12.2738 19.7384 11.7384 20.2738 11.4593 20.9476C11.339 21.238 11.2924 21.5375 11.2708 21.8546C11.25 22.1592 11.25 22.5303 11.25 22.9747V23.0253C11.25 23.4697 11.25 23.8408 11.2708 24.1454C11.2924 24.4625 11.339 24.762 11.4593 25.0524C11.7384 25.7262 12.2738 26.2616 12.9476 26.5407C13.238 26.661 13.5375 26.7076 13.8546 26.7292C13.9758 26.7375 14.1074 26.7425 14.25 26.7455L14.25 29ZM13.9567 20.7673C13.716 20.7837 13.5988 20.8132 13.5216 20.8452C13.2154 20.972 12.972 21.2154 12.8452 21.5216C12.8132 21.5988 12.7837 21.716 12.7673 21.9567C12.7504 22.2042 12.75 22.5238 12.75 23C12.75 23.4762 12.7504 23.7958 12.7673 24.0433C12.7837 24.284 12.8132 24.4012 12.8452 24.4784C12.972 24.7846 13.2154 25.028 13.5216 25.1549C13.5988 25.1868 13.716 25.2163 13.9567 25.2327C14.2042 25.2496 14.5238 25.25 15 25.25C15.4762 25.25 15.7958 25.2496 16.0433 25.2327C16.284 25.2163 16.4012 25.1868 16.4784 25.1549C16.7846 25.028 17.028 24.7846 17.1549 24.4784C17.1868 24.4012 17.2163 24.284 17.2327 24.0433C17.2496 23.7958 17.25 23.4762 17.25 23C17.25 22.5238 17.2496 22.2042 17.2327 21.9567C17.2163 21.716 17.1868 21.5988 17.1549 21.5216C17.028 21.2154 16.7846 20.972 16.4784 20.8452C16.4012 20.8132 16.284 20.7837 16.0433 20.7673C15.7958 20.7504 15.4762 20.75 15 20.75C14.5238 20.75 14.2042 20.7504 13.9567 20.7673Z" fill="#161616"/>
+							<path d="M14.25 17C14.25 17.4142 14.5858 17.75 15 17.75C15.4142 17.75 15.75 17.4142 15.75 17L15.75 11C15.75 10.5858 15.4142 10.25 15 10.25C14.5858 10.25 14.25 10.5858 14.25 11L14.25 17Z" fill="#161616"/>
+						</svg>
+					`
+
 			let iconHtml = fb.icon ? fb.icon : defaultIcon;
 
 			// 2. Render Content
 			if (fb.isIcon) {
-				btn.innerHTML = iconHtml;
+				btn.innerHTML = !fb.icon ? onlyFilterIcon : iconHtml;
 
 				// For accessibility, if there's no visible label, add aria-label
 				if (fb.label) btn.setAttribute("aria-label", fb.label);
@@ -202,6 +215,71 @@
 			}
 
 			wrapper.appendChild(btn);
+		}
+
+		// Render Columns Dropdown if columnOptions is present
+		if (columnOptions && columnOptions.columns) {
+			let colContainer = createElement("div", "momah-cols-dropdown ms-2");
+
+			// Button
+			let btn = createElement("button", "momah-cols-btn");
+			btn.type = "button";
+			btn.setAttribute("data-bs-toggle", "dropdown");
+			btn.setAttribute("aria-expanded", "false");
+
+			// Icon
+			const colsIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
+				<path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4V3zm9 0h-4v18h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"></path>
+			</svg>`;
+
+			const arrowIcon = `<svg class="momah-arrow-icon" width="10" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M1.1281 0.254404C1.22967 0.388883 1.53293 0.790336 1.71353 1.02176C2.07526 1.48527 2.56952 2.10118 3.10269 2.71526C3.63856 3.33244 4.20148 3.93352 4.70158 4.37539C4.95234 4.59695 5.17262 4.76531 5.35439 4.87489C5.52535 4.97796 5.62634 4.99939 5.62634 4.99939C5.62634 4.99939 5.72436 4.97795 5.89531 4.8749C6.07709 4.76532 6.29737 4.59696 6.54813 4.37539C7.04822 3.93352 7.61115 3.33244 8.14701 2.71525C8.68018 2.10116 9.17444 1.48525 9.53617 1.02173C9.71678 0.790305 10.0196 0.38942 10.1212 0.25494C10.3259 -0.0229959 10.7175 -0.0829425 10.9955 0.121751C11.2734 0.326445 11.3328 0.717694 11.1281 0.99563L11.1265 0.997727C11.02 1.13876 10.7059 1.55463 10.5216 1.79077C10.1517 2.26475 9.64302 2.89884 9.09089 3.53476C8.54146 4.16757 7.93673 4.81649 7.3758 5.31212C7.09605 5.5593 6.81247 5.78156 6.54067 5.94542C6.28602 6.09893 5.96361 6.25 5.62485 6.25C5.28609 6.25 4.96368 6.09893 4.70904 5.94541C4.43723 5.78156 4.15366 5.5593 3.87391 5.31212C3.31298 4.81649 2.70825 4.16758 2.15882 3.53477C1.60669 2.89886 1.098 2.26478 0.728099 1.7908C0.543709 1.55453 0.22964 1.13871 0.1233 0.997924L0.1219 0.996069C-0.082796 0.718135 -0.0237165 0.326489 0.254218 0.121793C0.532143 -0.0828953 0.923396 -0.0235072 1.1281 0.254404Z" fill="#54565B"/>
+				</svg>`;
+
+			btn.innerHTML = `${colsIcon} <span class="me-2">الأعمدة</span> ${arrowIcon}`;
+			colContainer.appendChild(btn);
+
+			// Menu
+			let menu = createElement("div", "momah-cols-menu dropdown-menu");
+
+			// Stop click from closing dropdown
+			menu.addEventListener("click", function (e) {
+				e.stopPropagation();
+			});
+
+			columnOptions.columns.forEach((col, index) => {
+				// Check if column is hidden
+				let isHidden = col.hide === true || col.hide === "true" || col.hide === 1;
+
+				// Request: columns with hide prop shouldn't appear in dropdown menu
+				if (isHidden) return;
+
+				// Create item
+				let item = createElement("label", "momah-col-item");
+
+				let checkbox = createElement("input", "momah-col-checkbox");
+				checkbox.type = "checkbox";
+				checkbox.checked = !isHidden;
+
+				checkbox.addEventListener("change", function () {
+					// Toggle hide property
+					col.hide = !this.checked;
+					// Trigger callback
+					if (typeof columnOptions.onColumnChange === "function") {
+						columnOptions.onColumnChange();
+					}
+				});
+
+				let label = createElement("span", "momah-col-label");
+				label.textContent = col.header || "Column " + (index + 1);
+
+				item.appendChild(checkbox);
+				item.appendChild(label);
+				menu.appendChild(item);
+			});
+
+			colContainer.appendChild(menu);
+			wrapper.appendChild(colContainer);
 		}
 
 		host.innerHTML = "";
@@ -244,6 +322,12 @@
 			}
 		});
 
+		// --- Handle Search Glass Icon Click ---
+		let searchIcon = host.querySelector(".momah-search-icon");
+		if (searchIcon) {
+			searchIcon.addEventListener("click", triggerSearch);
+		}
+
 		// --- Handle clear button click (filter-only mode) ---
 		let clearBtn = host.querySelector(".btn-clear");
 		if (clearBtn) {
@@ -268,10 +352,47 @@
 				: containerSelector;
 		if (!container) return;
 
+		// Add generic class for styling
+		container.classList.add("momah-table-host");
+
+		// Filter columns based on show/hide properties
+		var visibleColumns = columns.filter(function (col) {
+			if (col.hide === true || col.hide === "true" || col.hide === 1) return false;
+			if (col.show === false || col.show === "false" || col.show === 0) return false;
+			return true;
+		});
+
+
 		try {
-			let { search, filter } = options;
-			if (search || filter) {
-				renderTableActions(search || null, filter || null);
+			let { search, filter, columnPicker } = options;
+
+			// Check if we should render actions
+			if (!options.skipActions) {
+				// Prepare column options
+				let columnOptions = null;
+
+				// Only enable if columnPicker preference is provided
+				if (columnPicker) {
+					let pickerDefaults = (typeof columnPicker === 'object') ? columnPicker : {};
+					// Use provided container or fall back to search/filter container
+					let actionsContainer = pickerDefaults.containerSelector || (search && search.containerSelector) || (filter && filter.containerSelector);
+
+					if (actionsContainer) {
+						columnOptions = {
+							...pickerDefaults,
+							containerSelector: actionsContainer,
+							columns: columns,
+							onColumnChange: () => {
+								// Re-render table only, keeping actions intact
+								render(containerSelector, columns, records, { ...options, skipActions: true });
+							}
+						};
+					}
+				}
+
+				if (search || filter || columnOptions) {
+					renderTableActions(search || null, filter || null, columnOptions);
+				}
 			}
 		} catch (e) {
 			console.error("Error rendering table actions:", e);
@@ -299,11 +420,11 @@
 		let thead = createElement("thead");
 		let headRow = createElement("tr");
 
-		columns.forEach(function (col) {
+		visibleColumns.forEach(function (col) {
 			let th = createElement("th");
 			if (col.width) th.style.width = col.width;
 			if (col.className) th.className = col.className;
-			th.textContent = col.header || "";
+			th.innerHTML = col.header || "";
 			headRow.appendChild(th);
 		});
 		thead.appendChild(headRow);
@@ -314,7 +435,7 @@
 		if (!records || records.length === 0) {
 			let tr = createElement("tr");
 			let td = createElement("td", "text-center text-muted p-3");
-			td.setAttribute("colspan", columns.length);
+			td.setAttribute("colspan", visibleColumns.length);
 			td.textContent = "لا توجد بيانات";
 			tr.appendChild(td);
 			tbody.appendChild(tr);
@@ -322,7 +443,7 @@
 			records.forEach(function (rec, index) {
 				let tr = createElement("tr");
 
-				columns.forEach(function (col) {
+				visibleColumns.forEach(function (col) {
 					let td = createElement("td");
 					if (col.width) td.style.width = col.width;
 					if (col.tdClassName) td.className = col.tdClassName;
@@ -371,12 +492,15 @@
 					: pagination.containerSelector;
 
 			if (host) {
+				host.classList.add("momah-pagination-host");
 				host.innerHTML = "";
 				host.appendChild(paginationEl);
 			} else {
 				container.appendChild(paginationEl);
 			}
 		}
+
+
 	}
 
 	global.MomahTable = {
