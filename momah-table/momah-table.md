@@ -1,127 +1,303 @@
-# MomahTable Documentation
+# MomahTable.js - Simple Table Component
 
-`MomahTable` is a lightweight, dynamic table rendering utility designed for the Momah Legal Cases project. it supports custom columns, data binding, pagination, search, and filtering.
+A lightweight, dependency-free JavaScript component for rendering dynamic HTML tables with pagination, search, and filtering.
 
-## Installation
+---
 
-Ensure `momahTable.js` and `momah-table.css` are included in your page:
+## Quick Start (3 Steps)
+
+### 1. Include Files
 
 ```html
-<link rel="stylesheet" href="/assets/css/momah-table.css" />
-<script src="/assets/scripts/momahTable.js"></script>
+<link rel="stylesheet" href="~/assets/css/momahTable.css"/>
+<script src="/assets/js/momahTable.js"></script>
 
 <!-- incase need pagination include style -->
 <link rel="stylesheet" href="/assets/css/pagination.css" />
 ```
 
-## API Reference
+### 2. Create HTML Containers
 
-### `MomahTable.render(containerSelector, columns, records, options)`
+```html
+<div id="tableActions"></div>   <!-- Search/Filter container (optional) -->
+<div id="tableContainer"></div> <!-- Table container -->
+<div id="pagination"></div>     <!-- Pagination container (optional) -->
+```
 
-Renders a table into the specified container.
+### 3. Render the Table
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `containerSelector` | `string` \| `HTMLElement` | Table container selector eg. #id (Adds `.momah-table-host`) |
-| `columns` | `Array<Object>` | Configuration for table columns. |
-| `records` | `Array<Object>` | Array of data objects to display. Defaults to `[]`. |
-| `options` | `Object` | Optional configuration for pagination, search, and filtering. |
+```javascript
+const data = [
+    { id: 1, name: 'John Doe', email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
+];
+
+const columns = [
+    { header: 'ID', field: 'id' },
+    { header: 'Name', field: 'name' },
+    { header: 'Email', field: 'email' }
+];
+
+MomahTable.render('#tableContainer', columns, data);
+```
+
+---
+
+## Basic Usage
+
+### Simple Table (No Options)
+
+```javascript
+MomahTable.render('#tableContainer', columns, data);
+```
+
+### Table with Pagination
+
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
+    pagination: {
+        containerSelector: '#pagination',
+        currentPage: 1,
+        totalPages: 5,
+        onPageChange: (page) => loadData(page)
+    }
+});
+```
+
+### Table with Search
+
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
+    search: {
+        containerSelector: '#tableActions',
+        inputId: 'searchInput',
+        placeholder: 'Search...'
+    }
+});
+```
+
+### Table with Filter Button
+
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
+    filter: {
+        containerSelector: '#tableActions',
+        label: 'Filter',
+        targetModalId: 'filterModal'
+    }
+});
+```
+
+### Table with Column Picker
+
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
+    columnPicker: {
+        containerSelector: '#tableActions'
+    }
+});
+```
 
 ---
 
 ## Column Configuration
 
-Each object in the `columns` array can have the following properties:
-
 | Property | Type | Description |
-| :--- | :--- | :--- |
-| `header` | `string` | The text to display in the table header (`<th>`). |
-| `field` | `string` | The key in the record object to display in this column. |
-| `width` | `string` | CSS width (e.g., `"150px"`, `"20%"`). |
-| `className` | `string` | CSS class to apply to the header cell (`<th>`). |
-| `tdClassName` | `string` | CSS class to apply to the body cells (`<td>`). |
-| `render` | `Function` | Custom render function: `(record, index) => string \| HTMLElement`. Overrides `field`. |
-| `hide` | `boolean` \| `string` \| `number` | Hides the column if `true`, `"true"`, or `1`. |
-| `show` | `boolean` \| `string` \| `number` | Shows the column (default). Hides if `false`, `"false"`, or `0`. |
+|----------|------|-------------|
+| `header` | String | Column header text |
+| `field` | String | Data property to display |
+| `render` | Function | Custom cell content (returns HTML) |
+| `width` | String | Column width (e.g., `'100px'`, `'20%'`) |
+| `className` | String | CSS class for header |
+| `tdClassName` | String | CSS class for cells |
+| `hide` | Boolean | Set `true` to hide column (won't show in picker) |
 
----
-
-## Options Configuration
-
-### 1. Pagination
-Configures the table's pagination controls.
+### Using `render` for Custom Content
 
 ```javascript
-options: {
-    pagination: {
-        containerSelector: "#pagination-container", // Optional. Adds .momah-pagination-host
-        currentPage: 1,                             // Default: 1
-        totalPages: 10,                            // Default: 1
-        onPageChange: function(newPage) { ... }    // Callback when a page is clicked.
-    }
+{
+    header: 'Actions',
+    render: (record) => `
+        <button onclick="edit(${record.id})">Edit</button>
+        <button onclick="delete(${record.id})">Delete</button>
+    `
 }
 ```
 
-### 2. Search
-Renders a search input field. Adds `.momah-actions-host` to the container.
+---
+
+## Advanced Options
+
+### Full Example with All Features
 
 ```javascript
-options: {
+const options = {
     search: {
-        containerSelector: "#search-host", // Required. Adds .momah-actions-host
-        inputId: "txtFullName",            // Default: "txtFullName"
-        placeholder: "Search...",           // Default: ""
+        containerSelector: '#tableActions',
+        inputId: 'searchInput',
+        placeholder: 'Search by name...'
+    },
+    filter: {
+        containerSelector: '#tableActions',
+        label: 'Filter',
+        targetModalId: 'filterModal',
+        isIcon: false  // Set true for icon-only button
+    },
+    columnPicker: {
+        containerSelector: '#tableActions'
+    },
+    pagination: {
+        containerSelector: '#pagination',
+        currentPage: 1,
+        totalPages: 10,
+        onPageChange: (page) => loadData(page)
     }
-}
-```
-> [!NOTE]
-> The search logic automatically tries to call `window.performSearch()`, `window.LoadData()`, or `filterOptions.onFilter()` when Enter is pressed or the search icon is clicked.
+};
 
-### 3. Filter
-Renders a filter button (can be a standard button or icon-only).
+MomahTable.render('#tableContainer', columns, data, options);
+```
+
+### Search Options
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `containerSelector` | Yes | - | Container element selector |
+| `inputId` | No | `txtFullName` | Input element ID |
+| `placeholder` | No | - | Input placeholder text |
+
+### Filter Options
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `containerSelector` | Yes | - | Container element selector |
+| `label` | No | `تصفية البحث` | Button text |
+| `targetModalId` | No | - | Bootstrap modal ID to open |
+| `onClick` | No | - | Custom click handler |
+| `isIcon` | No | `false` | Show icon-only button |
+| `icon` | No | - | Custom SVG HTML |
+
+### Column Picker Options
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `containerSelector` | Yes | - | Container element selector |
+
+### Pagination Options
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `containerSelector` | Yes | - | Container element selector |
+| `currentPage` | Yes | - | Current page number |
+| `totalPages` | Yes | - | Total number of pages |
+| `onPageChange` | Yes | - | Function called when page changes |
+
+---
+
+## Handling Search/Filter Events
+
+When the user searches or filters, `MomahTable` will call one of these functions (in order):
+
+1. `window.performSearch()`
+2. `window.LoadData()`
+3. `filterOptions.onFilter`
+
+Define one of these in your page:
 
 ```javascript
-options: {
-    filter: {
-        containerSelector: "#filter-host", // Required. Adds .momah-actions-host
-        label: "Filter",                   // Text label for the button.
-        icon: '<svg>...</svg>',            // Custom SVG icon. Defaults to a funnel icon.
-        isIcon: false,                     // If true, renders only the icon without border/background.
-        targetModalId: "filterModal",      // If provided, adds data-bs-toggle="modal".
-        onClick: function(e) { ... },      // Click handler.
-        onFilter: function() { ... }       // Logic trigger for search/filter events.
-    }
+function performSearch() {
+    const value = document.getElementById('searchInput').value;
+    console.log('Search value:', value);
+    // Fetch new data and re-render table
+}
+
+function LoadData() {
+    // Your data loading logic
 }
 ```
 
 ---
 
-## Usage Example
+## Common Patterns
+
+### Pattern 1: Table Only
 
 ```javascript
-const columns = [
-    { header: "ID", field: "id", width: "50px" },
-    { header: "Name", field: "name" },
-    {
-        header: "Actions",
-        render: (rec) => `<button onclick="edit(${rec.id})">Edit</button>`
-    }
-];
+MomahTable.render('#tableContainer', columns, data);
+```
 
-const data = [
-    { id: 1, name: "Case A" },
-    { id: 2, name: "Case B" }
-];
+### Pattern 2: Table with Search
 
-MomahTable.render("#table-container", columns, data, {
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
+    search: { containerSelector: '#tableActions' }
+});
+```
+
+### Pattern 3: Table with Pagination
+
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
     pagination: {
+        containerSelector: '#pagination',
         currentPage: 1,
         totalPages: 5,
-        onPageChange: (p) => console.log("Navigating to page", p)
-    },
-    search: {
-        containerSelector: "#controls-container",
-        placeholder: "Find legal case..."
+        onPageChange: (page) => loadData(page)
     }
 });
 ```
+
+### Pattern 4: Table with Search + Filter + Pagination
+
+```javascript
+MomahTable.render('#tableContainer', columns, data, {
+    search: { containerSelector: '#tableActions' },
+    filter: {
+        containerSelector: '#tableActions',
+        label: 'Filter',
+        targetModalId: 'filterModal'
+    },
+    columnPicker: { containerSelector: '#tableActions' },
+    pagination: {
+        containerSelector: '#pagination',
+        currentPage: 1,
+        totalPages: 5,
+        onPageChange: (page) => loadData(page)
+    }
+});
+```
+
+---
+
+## Hiding Columns
+
+Columns can be hidden in two ways:
+
+### Method 1: Using `hide` property
+
+```javascript
+const columns = [
+    { header: 'ID', field: 'id' },
+    { header: 'Secret', field: 'secret', hide: true }, // Hidden
+    { header: 'Name', field: 'name' }
+];
+```
+
+### Method 2: Using `show` property
+
+```javascript
+const columns = [
+    { header: 'ID', field: 'id' },
+    { header: 'Secret', field: 'secret', show: false }, // Hidden
+    { header: 'Name', field: 'name' }
+];
+```
+
+---
+
+## Notes
+
+- The `render` function returns HTML content for cells
+- Hidden columns (with `hide: true`) won't appear in the Column Picker
+- Search input automatically triggers `Enter` key to search
+- Clear button (X) in search input clears and triggers search
+- Pagination shows ellipsis (...) for large page counts
