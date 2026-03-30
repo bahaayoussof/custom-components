@@ -1,52 +1,63 @@
-# _Breadcrumb
+# Breadcrumb Component Usage Guide
 
 ![_Breadcrumb](breadcrumb.png)
 
-```cshtml
-@model List<(string Name, string Url)>
+## Overview
+The `_Breadcrumb.cshtml` is a reusable Razor component that displays a navigation breadcrumb trail using Bootstrap's breadcrumb component.
 
-	<style>
-		a {
-			color: #54565B;
-			text-decoration: none;
-		}
+## Model Structure
+The component expects a `List<(string Name, string Url)>` model where each item contains:
+- `Name`: The display text for the breadcrumb item
+- `Url`: The URL link for the breadcrumb item
 
-		a:hover {
-			color: #54565B;
-		}
+## Basic Usage
 
-		a.active {
-			color: #9DA4AE;
-		}
-	</style>
+### In a Controller
+```csharp
+public IActionResult MyPage()
+{
+    var breadcrumb = new List<(string, string)>
+    {
+        ("Home", "/"),
+        ("Section", "/section"),
+        ("Subsection", "/section/subsection"),
+        ("Current Page", "")  // Empty URL for current page (active)
+    };
 
-	<nav class="d-none d-sm-flex" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-		<ol dir="rtl" class="breadcrumb" style="white-space:nowrap;">
-			@for (int i = 0; i < Model.Count; i++) { var item=Model[i]; var isActive=i==Model.Count - 1; <li
-				class="breadcrumb-item" aria-current="page">
-				<a href="@item.Url" class="@(isActive ? " active" : "" )">@item.Name</a>
-				</li>
-				}
-		</ol>
-	</nav>
+    return View(breadcrumb);
+}
 ```
 
-### How to use
+### In a View (Razor Page)
 ```cshtml
-define breadcrumb list:
-	- last item in the list is active by default
+@model List<(string Name, string Url)>
 @{
-    var breadcrumb = new List<(string Name, string Url)>
-    {
-        ("الرئيسية", "/"),
-        ("الخدمات الإلكترونية", "/services"),
-        ("أعمال لجان هيئة الخبراء", "/services/works"),
-    };
+    ViewData["Title"] = "My Page";
 }
 
+<partial name="_Breadcrumb" model="Model" />
+```
+
+### Example Implementation
+```cshtml
+@{
+    var breadcrumb = new List<(string, string)>
+    {
+        ("الرئيسية", "/"),
+        ("إدارة القضايا", "/cases"),
+        ("تفاصيل القضية", "/cases/123")
+    };
+}
 <partial name="_Breadcrumb" model="breadcrumb" />
 ```
 
-| Parameter | Type | Description | Default Value |
-| --- | --- | --- | --- |
-| Model | List<(string Name, string Url)> | The breadcrumb list | [] |
+## Features
+- **RTL Support**: Automatically displays breadcrumbs from right to left
+- **Active State**: The last item in the list is automatically marked as active (non-clickable)
+- **Responsive**: Hidden on mobile devices (`d-none d-sm-flex`), visible on small screens and above
+- **Custom Styling**: Links use `#54565B` color, active item uses `#9DA4AE`
+
+## Notes
+- The breadcrumb uses Bootstrap's `breadcrumb` component with `aria-label="breadcrumb"` for accessibility
+- The separator between items is `>` (defined by `--bs-breadcrumb-divider`)
+- The last item should typically have an empty URL or the current page URL to indicate it's the active location
