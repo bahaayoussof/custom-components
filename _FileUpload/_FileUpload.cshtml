@@ -16,6 +16,8 @@ catch { maxFileSizeDouble = 5.0; }
 }
 int maxFileSize = (int)Math.Ceiling(maxFileSizeDouble);
 
+string renderMode = Model.Length > 6 ? (string)Model[6] : "full";
+
 // ── Friendly MIME-type label ──────────────────────────────────────────
 string GetFriendlyName(string mimeType)
 {
@@ -50,6 +52,41 @@ var map = new System.Collections.Generic.Dictionary<string, string>(System.Strin
 
 	<!-- ════════════════════════  HTML  ════════════════════════ -->
 
+@if (renderMode == "short")
+{
+	<!-- ── Short render: icon + link trigger ─────────────────────────── -->
+	<div id="@id" class="file-upload-container">
+		<div class="d-flex align-items-center gap-2 file-upload-short-trigger" style="cursor:pointer; margin:0.5rem 0">
+			<!-- Paperclip icon -->
+			<svg xmlns="http://www.w3.org/2000/svg" width="17" height="20" fill="none" viewBox="0 0 17 20"><path fill="#000" fill-rule="evenodd" d="M5.75 1.5A4.25 4.25 0 0 0 1.5 5.75v5.5a6.75 6.75 0 0 0 13.5 0v-1.5a.75.75 0 0 1 1.5 0v1.5a8.25 8.25 0 0 1-16.5 0v-5.5a5.75 5.75 0 1 1 11.5 0v5.5a3.25 3.25 0 0 1-6.5 0v-4a.75.75 0 0 1 1.5 0v4a1.75 1.75 0 1 0 3.5 0v-5.5A4.25 4.25 0 0 0 5.75 1.5" clip-rule="evenodd"/></svg>
+
+			<!-- Trigger text acts as the browse button -->
+			<button type="button" class="file-input-button btn p-0 py-2 border-0 bg-transparent"
+				style="font-weight:500;text-decoration:none;">
+				إضافة مرفق
+			</button>
+		</div>
+
+		<!-- Hidden inputs (same as full mode) -->
+		<div class="drag-area" style="display:none!important;">
+			<span class="drag-file"></span>
+			<input type="file" class="file-input" name="@id" hidden />
+			<input type="text" class="file-validation-input" name="@(id)_validation"
+				style="opacity:0;width:1px;height:1px;position:absolute;z-index:-1;" @(required ? "required" : "") />
+		</div>
+
+		<!-- Error messages -->
+		<p class="text-sm hidden text-danger mt-1 mb-0 filesize-error">حجم الملف يجب أن يكون أقل من @maxFileSize ميجا بايت</p>
+		<p class="text-sm hidden text-danger mt-1 mb-0 filetype-error">الملف يجب أن يكون بإحدى الصيغ المدعومة</p>
+		<p class="text-sm hidden text-danger mt-1 mb-0 required-error">هذا الحقل مطلوب</p>
+		<p class="text-sm hidden text-danger mt-1 mb-0 maxfiles-error">لقد تجاوزت الحد الأقصى لعدد الملفات المسموح به (@maxFiles)</p>
+
+		<ul class="w-100 px-0 document-images mt-1"></ul>
+	</div>
+}
+else
+{
+	<!-- ── Full render (default) ──────────────────────────────────────── -->
 	<div id="@id" class="col-12 mt-3 file-upload-container">
 		<label class="form-label">
 			@if (required) { <span style="color:#B42318;">*</span> }
@@ -83,7 +120,7 @@ var map = new System.Collections.Generic.Dictionary<string, string>(System.Strin
 
 					<button type="button" class="btn btn-outline-secondary file-input-button mt-3">
 						تصفح الملفات
-						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="ms-1" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path
 								d="M9.58333 5.625C9.58333 5.27982 9.30351 5 8.95833 5C8.61316 5 8.33333 5.27982 8.33333 5.625V8.33333H5.625C5.27982 8.33333 5 8.61316 5 8.95833C5 9.30351 5.27982 9.58333 5.625 9.58333H8.33333V12.2917C8.33333 12.6368 8.61316 12.9167 8.95833 12.9167C9.30351 12.9167 9.58333 12.6368 9.58333 12.2917V9.58333H12.2917C12.6368 9.58333 12.9167 9.30351 12.9167 8.95833C12.9167 8.61316 12.6368 8.33333 12.2917 8.33333H9.58333V5.625Z"
 								fill="#161616" />
@@ -117,21 +154,9 @@ var map = new System.Collections.Generic.Dictionary<string, string>(System.Strin
 			<ul class="w-100 px-0 document-images"></ul>
 		</div>
 
-		<!-- File Preview Modal -->
-		<div class="file-preview-modal"
-			style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1050;justify-content:center;align-items:center;">
-			<div
-				style="background:#fff;border-radius:12px;max-width:800px;width:90%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;position:relative;">
-				<div
-					style="display:flex;align-items:center;justify-content:space-between;padding:20px 15px 15px;border-bottom:1px solid #E5E7EB;">
-					<h5 class="mb-0 file-preview-title text-truncate w-75" style="font-size:16px;font-weight:600;"></h5>
-					<button type="button" class="file-preview-close btn p-0 bg-transparent border-0"
-						style="font-size:24px;line-height:1;cursor:pointer;">&times;</button>
-				</div>
-				<div class="file-preview-body" style="padding:20px;overflow:auto;flex:1;text-align:center;"></div>
-			</div>
-		</div>
 	</div>
+}
+	@await Html.PartialAsync("UI/_FilePreview")
 
 	<!-- ════════════════════════  JavaScript  ════════════════════════ -->
 
@@ -155,36 +180,16 @@ var map = new System.Collections.Generic.Dictionary<string, string>(System.Strin
 				// ── Configuration ─────────────────────────────────────────────
 				maxFileSize = maxFileSize || 5;
 
-				const TEXT_TYPES = [
-					'text/plain', 'text/csv', 'text/html', 'text/css', 'text/xml',
-					'application/json', 'application/xml', 'application/javascript'
-				];
-				const TEXT_EXTENSIONS = ['.txt', '.csv', '.json', '.xml', '.log', '.html', '.css', '.js', '.ts', '.md', '.yaml', '.yml'];
-				const EXCEL_TYPES = [
-					'application/vnd.ms-excel',
-					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-					'application/vnd.oasis.opendocument.spreadsheet'
-				];
-				const EXCEL_EXTENSIONS = ['.xlsx', '.xls', '.xlsb', '.xlsm', '.ods'];
-				const WORD_TYPES = [
-					'application/msword',
-					'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-				];
-				const WORD_EXTENSIONS = ['.doc', '.docx'];
 				const DRAG_TEXT_DEFAULT = 'اسحب و أفلت الملفات هنا للرفع';
 				const DRAG_TEXT_ACTIVE = 'أفلت الملف هنا للرفع';
 
 				// ── DOM references (cached once) ──────────────────────────────
 				const dropArea = container.querySelector('.drag-area');
 				const dragFile = dropArea.querySelector('.drag-file');
-				const browseButton = dropArea.querySelector('.file-input-button');
+				const browseButton = container.querySelector('.file-input-button');
 				const fileInput = dropArea.querySelector('.file-input');
 				const documentImages = container.querySelector('.document-images');
 				const validationInput = container.querySelector('.file-validation-input');
-				const previewModal = container.querySelector('.file-preview-modal');
-				const previewBody = container.querySelector('.file-preview-body');
-				const previewCloseBtn = container.querySelector('.file-preview-close');
-				const previewTitle = container.querySelector('.file-preview-title');
 
 				// Error message elements
 				const errors = {
@@ -318,7 +323,9 @@ var map = new System.Collections.Generic.Dictionary<string, string>(System.Strin
 						if (docItem) {
 							const docName = docItem.querySelector('span.fileName').innerText;
 							const file = uploadedFiles.find(f => f.name === docName);
-							if (file) showPreviewModal(file);
+							if (file && typeof showFilePreview === 'function') {
+								showFilePreview(file);
+							}
 						}
 						return;
 					}
@@ -360,172 +367,7 @@ var map = new System.Collections.Generic.Dictionary<string, string>(System.Strin
 					handleFiles(e.dataTransfer.files);
 				});
 
-				// ── File type detection helpers ────────────────────────────────
-				function isTextFile(file) {
-					if (TEXT_TYPES.includes(file.type)) return true;
-					const name = file.name.toLowerCase();
-					return TEXT_EXTENSIONS.some(ext => name.endsWith(ext));
-				}
-
-				function isExcelFile(file) {
-					if (EXCEL_TYPES.includes(file.type)) return true;
-					const name = file.name.toLowerCase();
-					return EXCEL_EXTENSIONS.some(ext => name.endsWith(ext));
-				}
-
-				function isWordFile(file) {
-					if (WORD_TYPES.includes(file.type)) return true;
-					const name = file.name.toLowerCase();
-					return WORD_EXTENSIONS.some(ext => name.endsWith(ext));
-				}
-
-				// ── Lazy-load SheetJS ─────────────────────────────────────────
-				function loadSheetJS() {
-					return new Promise((resolve, reject) => {
-						if (window.XLSX) return resolve(window.XLSX);
-						const script = document.createElement('script');
-						script.src = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
-						script.onload = () => resolve(window.XLSX);
-						script.onerror = () => reject(new Error('Failed to load SheetJS'));
-						document.head.appendChild(script);
-					});
-				}
-
-				// ── Lazy-load Mammoth.js (Word preview) ───────────────────────
-				function loadMammoth() {
-					return new Promise((resolve, reject) => {
-						if (window.mammoth) return resolve(window.mammoth);
-						const script = document.createElement('script');
-						script.src = 'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js';
-						script.onload = () => resolve(window.mammoth);
-						script.onerror = () => reject(new Error('Failed to load Mammoth.js'));
-						document.head.appendChild(script);
-					});
-				}
-
-				// ── Preview modal ─────────────────────────────────────────────
-				function openModal() { previewModal.style.display = 'flex'; }
-
-				function showPreviewModal(file) {
-					const url = URL.createObjectURL(file);
-					previewTitle.textContent = file.name;
-
-					if (file.type.startsWith('image/')) {
-						previewBody.innerHTML = `<img src="${url}" alt="${file.name}" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:8px;" />`;
-						openModal();
-						return;
-					}
-
-					if (file.type === 'application/pdf') {
-						previewBody.innerHTML = `<iframe src="${url}" style="width:100%;height:65vh;border:none;border-radius:8px;"></iframe>`;
-						openModal();
-						return;
-					}
-
-					if (isTextFile(file)) {
-						URL.revokeObjectURL(url);
-						const reader = new FileReader();
-						reader.onload = (e) => {
-							const escaped = e.target.result
-								.replace(/&/g, '&amp;')
-								.replace(/</g, '&lt;')
-								.replace(/>/g, '&gt;');
-							previewBody.innerHTML = `<pre style="text-align:left;direction:ltr;max-height:65vh;overflow:auto;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;font-size:13px;white-space:pre-wrap;word-wrap:break-word;">${escaped}</pre>`;
-							openModal();
-						};
-						reader.readAsText(file);
-						return;
-					}
-
-					if (isExcelFile(file)) {
-						URL.revokeObjectURL(url);
-						previewBody.innerHTML = '<p style="color:#6B7280;">جاري تحميل المعاينة...</p>';
-						openModal();
-						loadSheetJS().then(XLSX => {
-							const reader = new FileReader();
-							reader.onload = (e) => {
-								try {
-									const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-									const html = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], { editable: false });
-									previewBody.innerHTML = `<div style="max-height:65vh;overflow:auto;direction:ltr;text-align:left;">
-								<style>.file-preview-body table{width:100%;border-collapse:collapse;font-size:13px;}.file-preview-body td,.file-preview-body th{border:1px solid #E5E7EB;padding:6px 10px;text-align:left;white-space:nowrap;}.file-preview-body tr:first-child td,.file-preview-body th{background:#F3F4F6;font-weight:600;}</style>${html}</div>`;
-								} catch {
-									previewBody.innerHTML = '<p style="color:#EF4444;">حدث خطأ أثناء قراءة الملف</p>';
-								}
-							};
-							reader.readAsArrayBuffer(file);
-						}).catch(() => {
-							previewBody.innerHTML = '<p style="color:#EF4444;">فشل تحميل مكتبة المعاينة</p>';
-						});
-						return;
-					}
-
-					if (isWordFile(file)) {
-						URL.revokeObjectURL(url);
-						previewBody.innerHTML = '<p style="color:#6B7280;">جاري تحميل المعاينة...</p>';
-						openModal();
-						loadMammoth().then(mammoth => {
-							const reader = new FileReader();
-							reader.onload = (e) => {
-								mammoth.convertToHtml({ arrayBuffer: e.target.result })
-									.then(result => {
-										previewBody.innerHTML = `<div class="word-preview-wrapper" style="max-height:65vh;overflow:auto;background:#E8E8E8;padding:20px;">
-								<style>
-									.word-preview-page{background:#fff;max-width:780px;margin:0 auto;padding:50px 60px;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,0.12);direction:rtl;text-align:right;font-family:'Segoe UI',Tahoma,'Noto Sans Arabic',Arial,sans-serif;font-size:14px;line-height:1.8;color:#1a1a1a;}
-									.word-preview-page p{margin:0 0 10px;orphans:2;widows:2;}
-									.word-preview-page h1{font-size:22px;font-weight:700;margin:24px 0 12px;color:#111;border-bottom:2px solid #E5E7EB;padding-bottom:6px;}
-									.word-preview-page h2{font-size:18px;font-weight:700;margin:20px 0 10px;color:#222;}
-									.word-preview-page h3{font-size:16px;font-weight:600;margin:16px 0 8px;color:#333;}
-									.word-preview-page strong,.word-preview-page b{font-weight:700;color:#111;}
-									.word-preview-page ul,.word-preview-page ol{margin:8px 20px 12px 0;padding:0 18px 0 0;}
-									.word-preview-page li{margin-bottom:4px;}
-									.word-preview-page table{width:100%;border-collapse:collapse;margin:16px 0;border:1.5px solid #999;}
-									.word-preview-page th,.word-preview-page td{border:1px solid #bbb;padding:10px 14px;font-size:13px;vertical-align:top;}
-									.word-preview-page thead th,.word-preview-page tr:first-child td{background:#f0f2f5;font-weight:700;color:#222;border-bottom:2px solid #999;}
-									.word-preview-page tbody tr:nth-child(even){background:#fafbfc;}
-									.word-preview-page tbody tr:hover{background:#f0f4ff;}
-									.word-preview-page img{max-width:100%;height:auto;border-radius:4px;margin:8px 0;}
-									.word-preview-page a{color:#2563EB;text-decoration:underline;}
-								</style>
-								<div class="word-preview-page">${result.value}</div></div>`;
-									})
-									.catch(() => {
-										previewBody.innerHTML = '<p style="color:#EF4444;">حدث خطأ أثناء قراءة الملف</p>';
-									});
-							};
-							reader.readAsArrayBuffer(file);
-						}).catch(() => {
-							previewBody.innerHTML = '<p style="color:#EF4444;">فشل تحميل مكتبة المعاينة</p>';
-						});
-						return;
-					}
-
-					// Unsupported file — offer download
-					previewBody.innerHTML = `<div style="padding:40px 20px;">
-				${ICONS.fileFallback}
-				<p style="font-size:14px;color:#6B7280;margin-bottom:16px;">لا يمكن معاينة هذا الملف مباشرة</p>
-				<a href="${url}" download="${file.name}" class="btn btn-outline-secondary" style="text-decoration:none;">تحميل الملف</a>
-			</div>`;
-					openModal();
-				}
-
-				function hidePreviewModal() {
-					previewModal.style.display = 'none';
-					const img = previewBody.querySelector('img');
-					const iframe = previewBody.querySelector('iframe');
-					const link = previewBody.querySelector('a[download]');
-					if (img) URL.revokeObjectURL(img.src);
-					if (iframe) URL.revokeObjectURL(iframe.src);
-					if (link) URL.revokeObjectURL(link.href);
-					previewBody.innerHTML = '';
-				}
-
-				if (previewCloseBtn) previewCloseBtn.addEventListener('click', hidePreviewModal);
-				if (previewModal) {
-					previewModal.addEventListener('click', (e) => {
-						if (e.target === previewModal) hidePreviewModal();
-					});
-				}
+				// ── File type detection helpers handled via _FilePreview ──────
 
 				// ── Public API ────────────────────────────────────────────────
 				return {
