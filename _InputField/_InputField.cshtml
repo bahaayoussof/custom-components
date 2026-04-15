@@ -12,6 +12,8 @@ if (string.IsNullOrEmpty(type))
 {
 type = "text";
 }
+// Optional value passed via view-data: new ViewDataDictionary(ViewData) { { "Value", "..." } }
+var value = ViewData["Value"] as string ?? "";
 }
 <style>
 	input[type=number]::-webkit-outer-spin-button,
@@ -35,6 +37,6 @@ type = "text";
 		}
 		@label
 	</label>
-	<input type="@type" id="@id" name="@id" class="form-control" placeholder="@placeholder" @(required ? "required" : ""
+	<input type="@type" id="@id" name="@id" class="form-control" placeholder="@placeholder" value="@value" @(required ? "required" : ""
 		) />
 </div>
