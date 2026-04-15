@@ -23,7 +23,14 @@ var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص �
 ### How to use
 ```cshtml
 <partial name="_TextAreaField" model='("عنصر مطلوب بقيمة توضيحيه", true, "my-custom-id-1", "عنصر مطلوب بقيمة توضيحيه")' />
-<partial name="_TextAreaField" model='("عنصر غير مطلوب بقيمة توضيحيه افتراضية", false, "my-custom-id-2", "")' />
+<partial name="_TextAreaField" model='("عنصر غير مطلوب بقيمة توضيحيه افتراضية", false, "my-custom-id-2", "")'
+	view-data='new ViewDataDictionary(ViewData) { { "Value", "القيمة الافتراضية" } }' />
+
+@await Html.PartialAsync("UI/_TextArea",
+		(Label: "Notes", Required: false, Id: "notes", Placeholder: ""),
+		new ViewDataDictionary(ViewData) { { "Value", "this is test text" } })
+
+
 ```
 
 | Parameter | Type | Description | Default Value |
