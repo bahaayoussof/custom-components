@@ -10,6 +10,22 @@ You can use the partial by passing an anonymous object as the model:
 ```razor
 <partial name="UI/_CKEditor"
          model='new { Id = "description", Label = "Description", Required = true }' />
+
+  @await Html.PartialAsync("UI/_CKEditor", new {
+      id = "editor1",
+      label = "وصف الحالة",
+      required = true,
+      height = "200px"
+  })
+
+<!-- readonly version -->
+  @await Html.PartialAsync("UI/_CKEditor", new { 
+      id = "editor2", 
+      label = "ملخص القضية (للعرض فقط)", 
+      value = readonlyContent, 
+      @readonly = true, 
+      height = "320px" 
+  })
 ```
 
 ## Available Properties
