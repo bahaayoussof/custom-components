@@ -9,6 +9,7 @@ if (!assetsLoaded) Context.Items[AssetsKey] = true;
 string id = "";
 string label = "";
 bool required = false;
+bool readOnly = false;
 string placeholder = "";
 string height = "160px";
 string value = "";
@@ -35,6 +36,10 @@ case "label": label = val.ToString(); break;
 case "required":
 if (val is bool b) required = b;
 else if (bool.TryParse(val.ToString(), out bool b2)) required = b2;
+break;
+case "readonly":
+if (val is bool rb) readOnly = rb;
+else if (bool.TryParse(val.ToString(), out bool rb2)) readOnly = rb2;
 break;
 case "height": height = val.ToString(); break;
 case "value": value = val.ToString(); break;
@@ -119,6 +124,21 @@ if (string.IsNullOrEmpty(placeholder)) placeholder = label;
 		display: block;
 	}
 
+	/* Readonly State */
+	.ckeditor-component-wrapper.is-readonly .ck-editor__editable {
+		background-color: #f8f9fa !important;
+		color: #6c757d !important;
+	}
+
+	.ckeditor-component-wrapper.is-readonly .ck-toolbar {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	.ckeditor-component-wrapper.is-readonly .ck-editor__editable * {
+		user-select: text;
+	}
+
 	/* UI Overlays */
 	.ck.ck-balloon-panel {
 		z-index: 10001 !important;
@@ -145,14 +165,21 @@ if (string.IsNullOrEmpty(placeholder)) placeholder = label;
 			const element = typeof elementId === 'string' ? document.getElementById(elementId) : elementId;
 			if (!element) return Promise.resolve(null);
 
-			const config = { ...this.defaultConfig, ...options };
+			const { readonly, height, ...editorOptions } = options;
+			const config = { ...this.defaultConfig, ...editorOptions };
 
 			return ClassicEditor.create(element, config)
 				.then(editor => {
 					element.ckeditorInstance = editor;
-					this.applyCustomStyles(editor, options.height);
-					this.setupValidation(element, editor);
-					this.setupDataSync(element, editor);
+					this.applyCustomStyles(editor, height);
+					if (readonly) {
+						editor.enableReadOnlyMode('readonly-lock');
+						const wrapper = element.closest('.ckeditor-component-wrapper');
+						if (wrapper) wrapper.classList.add('is-readonly');
+					} else {
+						this.setupValidation(element, editor);
+						this.setupDataSync(element, editor);
+					}
 					return editor;
 				})
 				.catch(err => {
@@ -246,15 +273,15 @@ if (string.IsNullOrEmpty(placeholder)) placeholder = label;
 	}
 
 	<textarea id="@id" name="@id" class="form-control" placeholder="@placeholder" @(required ? "required" : ""
-		)>@value</textarea>
+		)>@Html.Raw(value)</textarea>
 
-	<div class="ckeditor-error-message" id="@id-error">الحقل مطلوب</div>
+	<div class="ckeditor-error-message" id="@id-error">@label مطلوب</div>
 
 	<script>
 		(function () {
 			const init = () => {
 				if (window.CKEditorManager) {
-					window.CKEditorManager.init('@id', { height: '@height' });
+					window.CKEditorManager.init('@id', { height: '@height', readonly: @(readOnly ? "true" : "false") });
 				}
 			};
 			if (document.readyState === 'loading') {
