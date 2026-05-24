@@ -53,6 +53,17 @@ type = "text";
 <partial name="_InputField" model='("رقم الهوية/ الإقامة", true, "idNumber", " رقم الهوية/ الإقامة", "number")' />
 <partial name="_InputField" model='("حقل نوع نص", true, "textid", " نص تجريبي")' />
 <partial name="_InputField" model='("البريد الإلكتروني", true, "email", " البريد الإلكتروني", "email")' />
+
+@* No value *@
+<partial name="UI/_InputField" model='("حقل نوع نص", true, "textid", " نص تجريبي")' />
+
+@* With value *@
+<partial name="UI/_InputField" model='("حقل نوع نص", true, "textid2", " نص تجريبي")'
+	view-data='new ViewDataDictionary(ViewData) { { "Value", "القيمة الافتراضية" } }' />
+
+@* With type + value *@
+<partial name="UI/_InputField" model='("حقل نوع ايميل", true, "emailid", " email address", "email")'
+        view-data='new ViewDataDictionary(ViewData) { { "Value", "mail@domain.com" } }' />
 ```
 
 

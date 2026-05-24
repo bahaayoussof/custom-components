@@ -1,6 +1,7 @@
 @model (string Label, bool Required, string Id, string Placeholder)
 @{
-var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص هنا" : Model.Placeholder;
+    var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص هنا" : Model.Placeholder;
+    var value = ViewData["Value"] as string ?? " ";
 }
 <div class="mb-4">
 	<label class="form-label text-gray-700" for="@Model.Id">
@@ -11,5 +12,5 @@ var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص �
 		@Model.Label
 	</label>
 	<textarea id="@Model.Id" class="form-control" style="height: 100px;" rows="3" placeholder="@placeholder"
-		@(Model.Required ? "required" : "" )></textarea>
+		@(Model.Required ? "required" : "" )>@value</textarea>
 </div>
