@@ -1,0 +1,210 @@
+---
+sidebar_label: "_AttachBox"
+title: "_AttachBox Component"
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+<TabItem value="guide" label="Guide" default>
+
+# _AttachBox Partial
+![alt text](./image.png)
+
+The `_AttachBox` partial view provides a consistent UI element for displaying and interacting with an attached file. It displays the file's name alongside an automatically determined icon representing its format, and offers standard actions like previewing and downloading the file directly.
+
+## Properties
+
+You can use the partial in your views as follows:
+
+```html
+<partial name="UI/_AttachBox" model='new { FileId = "12345", FileName = "My Document.pdf" }' />
+```
+
+### Model Property Table
+
+| Property | Type   | Required | Default Value | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **FileId** | `string` | **Yes** | `""` | The unique ID of the attachment from the database or DMS. E.g., `"27131"`. The download and preview URLs will be built based on this ID. |
+| **FileName** | `string` | **Yes** | `""` | The display name of the file (e.g., `"Resume.pdf"`). |
+| **Id** | `string` | No | Generated string | The HTML `id` attribute for the container element. If not specified, a unique auto-ID in the format `attach-&#123;random&#125;` will be generated automatically. |
+
+## Feature Set
+
+- **File Icon Autodetection:** The file extension (parsed from `FileName` or `FileId`) determines the file type (e.g., pdf, word, excel, image). The icon is rendered dynamically based on this type, though in the current version, a generic layout applies.
+- **Inline Preview:** Clicking the preview (eye) icon will open the file in the shared inline Global Preview Modal (`_FilePreview`). This works seamlessly for images, text, code, PDFs, and Office files across devices.
+- **Direct Download:** The download icon constructs the hyperlink using the `FileId` and forces a download via the HTML5 `download` attribute on the anchor tag.
+
+## Examples
+
+### Using only FileId
+```html
+<partial name="UI/_AttachBox" model='new { FileId = "48392", FileName = "Consultation Summary.docx" }' />
+```
+*Note: Make sure that `FileId` parses to a meaningful file route or the file name must be supplemented since extracting a name from an ID alone returns the ID itself.*
+
+### Full Example with all arguments
+```html
+<partial name="UI/_AttachBox"
+    model='new {
+        FileId = "8582",
+        FileName = "Consultation Summary.docx",
+        Id = "my-custom-attach-box"
+    }'
+/>
+```
+
+
+</TabItem>
+<TabItem value="_AttachBox.cshtml" label="_AttachBox.cshtml">
+
+```cshtml
+@using Microsoft.AspNetCore.Routing
+@model dynamic
+@{
+    // ── Parameter extraction ──────────────────────────────────────────────────
+    string FileId    = "";
+    string FileName   = "";
+    string Id         = "";  // optional — auto-generated when empty
+    string actionUrl  = "/Common/PreviewAttachment";  // optional — overridable via model
+
+    if (Model != null)
+    {
+        var props = new RouteValueDictionary(Model);
+        if (props.TryGetValue("FileId",     out var fu))  FileId    = fu?.ToString()  ?? "";
+        if (props.TryGetValue("FileName",   out var fn))  FileName  = fn?.ToString()  ?? "";
+        if (props.TryGetValue("Id",         out var fid)) Id        = fid?.ToString() ?? "";
+        if (props.TryGetValue("ActionUrl",  out var au) && !string.IsNullOrWhiteSpace(au?.ToString()))
+            actionUrl = au.ToString()!;
+    }
+
+    // Display name fallback (used to compute FileName as well)
+    if (string.IsNullOrWhiteSpace(FileName))
+    {
+        FileName = System.IO.Path.GetFileName(FileId ?? "").Split('?')[0];
+    }
+    var DisplayName = FileName;
+
+    // Auto-generate a unique id when none is provided
+    if (string.IsNullOrWhiteSpace(Id))
+        Id = "attach-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+
+    // Infer type from file extension when FileType is not supplied
+    string GetExtensionType(string name, string url)
+    {
+        var src = !string.IsNullOrEmpty(name) ? name : url ?? "";
+        var ext = System.IO.Path.GetExtension(src).ToLowerInvariant().TrimStart('.');
+        return ext switch
+        {
+            "pdf"                          => "pdf",
+            "jpg" or "jpeg" or "png"
+                or "gif" or "bmp"
+                or "webp" or "svg"         => "image",
+            "doc" or "docx"               => "word",
+            "xls" or "xlsx" or "csv"      => "excel",
+            _                              => "other"
+        };
+    }
+
+    string FileType = GetExtensionType(FileName, FileId).ToLowerInvariant();
+
+    // Can this type be previewed inline in a browser?
+    bool CanPreview = true;
+}
+
+@* ═══════════════════════  Styles (once per page guard)  ═══════════════════════ *@
+<style>
+    /* AttachBox — scoped via .ab- prefix */
+    .ab-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #F3F4F6;
+        border: 1px solid #F3F4F6;
+        border-radius: 4px;
+        padding: 4px 12px;
+        transition: box-shadow .2s, border-color .2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ab-info { flex: 1; min-width: 0; }
+    .ab-type-label { font-size: .72rem; color: #9CA3AF; margin-top: 2px; }
+
+    .ab-actions { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+    .ab-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 28px; height: 28px; border-radius: 7px; border: none;
+        background: transparent; cursor: pointer; transition: background .15s, border-color .15s;
+        text-decoration: none; color: #374151;
+    }
+    .ab-btn:hover { background: #F3F4F6; border-color: #D1D5DB; color: #111827; }
+    .ab-btn svg   { pointer-events: none; }
+
+</style>
+
+@* ═══════════════════════  HTML  ═══════════════════════ *@
+
+<div class="ab-card mb-2" id="@Id">
+
+    <!-- Name & type -->
+    <div class="ab-info">
+        <div class="text-truncate" title="@DisplayName">@DisplayName</div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="ab-actions">
+        @if (CanPreview)
+        {
+            <!-- Preview button -->
+            <button type="button" class="ab-btn ab-preview-btn"
+                    title="معاينة"
+                    data-file-url="@FileId"
+                    data-file-type="@FileType"
+                    data-file-name="@DisplayName"
+                    onclick="openAttachmentFromUrl('@FileId', '@DisplayName', '@FileType')"
+                    >
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linejoin="round" stroke-width="1.5" d="M1 10s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+        }
+
+        <!-- Download -->
+        <a class="ab-btn" href="@actionUrl/@FileId" download="@DisplayName" title="تحميل">
+           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 13 13"><path fill="#161616" d="M7.083.625a.625.625 0 1 0-1.25 0v7.052l-.005-.006c-.175-.208-.347-.427-.508-.631l-.037-.048a8 8 0 0 0-.46-.553.625.625 0 0 0-.896.872c.074.076.195.227.373.453l.039.05c.158.202.344.439.536.665.205.242.434.493.664.689.115.098.245.195.384.27.135.071.32.145.535.145s.4-.074.535-.146c.14-.074.27-.171.385-.27.23-.195.459-.446.664-.688.191-.226.377-.463.536-.665l.039-.05a7 7 0 0 1 .373-.453.625.625 0 1 0-.897-.872c-.13.135-.299.35-.46.553l-.036.048c-.161.204-.333.423-.509.63l-.005.007zM.625 11.667a.625.625 0 1 0 0 1.25h11.667a.625.625 0 0 0 0-1.25z"/></svg>
+        </a>
+    </div>
+</div>
+
+@await Html.PartialAsync("UI/_FilePreview")
+@await Html.PartialAsync("UI/_StatusModal")
+
+<script>
+    function openAttachmentFromUrl(id, fileName, fileType) {
+        if (!id) {
+             showStatusModal({
+                type: 'info',
+                title: 'الملف غير متاح',
+            });
+            return;
+        }
+
+        let url = `@actionUrl/${ id }`;
+
+        // Use the shared file viewer modal
+        if (typeof showFilePreview === 'function') {
+            showFilePreview(url, fileName, fileType);
+        } else if (window.openPdfViewer) {
+            window.openPdfViewer(url, fileName);
+        } else {
+            // Fallback: open in new tab
+            window.open(url, '_blank');
+        }
+    }
+
+</script>
+```
+
+</TabItem>
+</Tabs>
