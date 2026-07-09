@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useColorMode } from "@docusaurus/theme-common";
-import { componentConfigs } from "./configs";
+import { componentConfigs } from "./configs/index";
 import { generatedComponents } from "./generated";
 import "./styles.css";
 
@@ -70,21 +70,7 @@ export default function Playground({ componentName }) {
     componentConfigs[componentName] || fallbackConfig(componentName);
 
   // Helper to determine if a prop is required
-  const isPropRequired = (prop) => {
-    if (prop.required) return true;
-    const reqNames = [
-      "content",
-      "label",
-      "title",
-      "fileName",
-      "fileId",
-      "id",
-      "optionsRaw",
-      "columnsRaw",
-      "message",
-    ];
-    return reqNames.includes(prop.name);
-  };
+  const isPropRequired = (prop) => prop.required === true;
 
   // 2. Initialize properties state & errors state
   const initialValues = {};
@@ -162,21 +148,7 @@ export default function Playground({ componentName }) {
   // 4. Generate snippets
   const razorCode = config.renderRazor ? config.renderRazor(propsState) : "";
 
-  const whitelist = [
-    "Tooltip",
-    "Badge",
-    "Banner",
-    "Notification",
-    "LabelTip",
-    "DateInput",
-    "DateRange",
-    "InputField",
-    "TextArea",
-    "AttachBox",
-    "AttachmentCard",
-    "StatusModal",
-  ];
-  const gen = whitelist.includes(componentName)
+  const gen = config.useGeneratedMarkup && generatedComponents[componentName]
     ? generatedComponents[componentName]
     : null;
   const rawHtmlCode =
