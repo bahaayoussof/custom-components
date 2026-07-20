@@ -1,3 +1,5 @@
+import { requiredLabel } from "./utils";
+
 export const FileUpload = {
   title: "_FileUpload",
   props: [
@@ -52,7 +54,7 @@ export const FileUpload = {
   renderHtml: (props) => {
     return `<div class="mb-3 w-100" style="max-width:400px; text-align:right;" dir="rtl">
   <label class="form-label fw-bold" style="font-size:0.9rem; color: inherit;">
-    ${props.required ? '<span class="text-danger" style="margin-left:4px;">*</span>' : ""}${props.label}
+    ${requiredLabel(props.label, props.required)}
   </label>
   <div style="border: 2px dashed #00A79D; border-radius: 8px; padding: 2rem; background: #00A79D05; text-align: center; cursor: pointer;">
     <i class="bi bi-cloud-upload" style="font-size: 2rem; color: #00A79D;"></i>

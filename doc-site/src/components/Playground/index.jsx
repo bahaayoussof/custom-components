@@ -4,7 +4,12 @@ import { componentConfigs } from "./configs/index";
 import { generatedComponents } from "./generated";
 import "./styles.css";
 
-// Interpolate template expression using props state (supporting nested balanced braces)
+/**
+ * Interpolates template expressions using the props state.
+ * SECURITY NOTE: Uses `new Function` to evaluate template expressions.
+ * This is designed for internal-only documentation usage with trusted inputs.
+ * Do not expose this function to execute untrusted user-supplied string data.
+ */
 export function interpolate(template, props) {
   if (!template) return "";
 
@@ -162,6 +167,27 @@ export default function Playground({ componentName }) {
     "",
   );
 
+  // Debounce iframe updates to prevent lag during fast typing/input changes
+  const [debouncedParams, setDebouncedParams] = useState({
+    htmlCode,
+    propsState,
+    direction,
+    colorMode,
+  });
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedParams({
+        htmlCode,
+        propsState,
+        direction,
+        colorMode,
+      });
+    }, 250);
+
+    return () => clearTimeout(handler);
+  }, [htmlCode, propsState, direction, colorMode]);
+
   // 5. Update iframe srcdoc
   useEffect(() => {
     if (!iframeRef.current) return;
@@ -171,28 +197,43 @@ export default function Playground({ componentName }) {
       iframeRef.current.contentWindow.document;
     if (!doc) return;
 
+    const {
+      htmlCode: debouncedHtml,
+      propsState: debouncedProps,
+      direction: debouncedDir,
+      colorMode: debouncedMode,
+    } = debouncedParams;
+
     const componentCss =
-      gen && gen.css ? interpolate(gen.css, propsState) : config.css || "";
+      gen && gen.css ? interpolate(gen.css, debouncedProps) : config.css || "";
     const componentJs =
-      gen && gen.js ? interpolate(gen.js, propsState) : config.js || "";
+      gen && gen.js ? interpolate(gen.js, debouncedProps) : config.js || "";
 
     const srcDoc = `
       <!DOCTYPE html>
-      <html lang="ar" dir="${direction}" data-bs-theme="${colorMode}">
+      <html lang="ar" dir="${debouncedDir}" data-bs-theme="${debouncedMode}">
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <script>
             window.addEventListener('error', function(e) {
               const msg = e.message || (e.reason && e.reason.message) || '';
-              if (msg && msg.indexOf('ResizeObserver loop') >= 0) {
+              if (
+                msg &&
+                (msg.includes('ResizeObserver loop completed with undelivered notifications') ||
+                  msg.includes('ResizeObserver loop limit exceeded'))
+              ) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
               }
             }, true);
             window.addEventListener('unhandledrejection', function(e) {
               const msg = e.message || (e.reason && e.reason.message) || '';
-              if (msg && msg.indexOf('ResizeObserver loop') >= 0) {
+              if (
+                msg &&
+                (msg.includes('ResizeObserver loop completed with undelivered notifications') ||
+                  msg.includes('ResizeObserver loop limit exceeded'))
+              ) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
               }
@@ -218,7 +259,7 @@ export default function Playground({ componentName }) {
         </head>
         <body>
           <div id="playground-component-root" style="width: 100%; display: flex; justify-content: center;">
-            ${htmlCode}
+            ${debouncedHtml}
           </div>
           <!-- Load jQuery & Bootstrap JS Bundle -->
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -291,32 +332,36 @@ export default function Playground({ componentName }) {
     doc.write(srcDoc);
     doc.close();
 
-    // Auto-adjust iframe height to its contents
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        if (iframeRef.current) {
-          const bodyHeight = entry.target.scrollHeight;
-          window.requestAnimationFrame(() => {
-            if (iframeRef.current) {
-              iframeRef.current.style.height = `${Math.max(bodyHeight + 40, 200)}px`;
-            }
-          });
-        }
-      }
-    });
-
-    // Wait for iframe body to load before observing
+    // Auto-adjust iframe height to its contents after load
     iframeRef.current.onload = () => {
       const body = doc.querySelector("body");
-      if (body) {
-        resizeObserver.observe(body);
-      }
+      if (!body) return;
+
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          if (iframeRef.current) {
+            const bodyHeight = entry.target.scrollHeight;
+            window.requestAnimationFrame(() => {
+              if (iframeRef.current) {
+                iframeRef.current.style.height = `${Math.max(bodyHeight + 40, 200)}px`;
+              }
+            });
+          }
+        }
+      });
+
+      resizeObserver.observe(body);
+
+      // Store cleanup function on the DOM node to avoid race conditions
+      iframeRef.current.cleanupObserver = () => resizeObserver.disconnect();
     };
 
     return () => {
-      resizeObserver.disconnect();
+      if (iframeRef.current && typeof iframeRef.current.cleanupObserver === "function") {
+        iframeRef.current.cleanupObserver();
+      }
     };
-  }, [htmlCode, direction, propsState, colorMode]);
+  }, [debouncedParams]);
 
   // 6. Handle Copy to Clipboard
   const handleCopy = () => {

@@ -1,3 +1,5 @@
+import { requiredLabel } from "./utils";
+
 export const CkEditor = {
   title: "_CkEditor",
   props: [
@@ -46,7 +48,7 @@ export const CkEditor = {
   renderHtml: (props) => {
     return `<div class="mb-3 w-100" style="text-align:right;" dir="rtl">
   <label class="form-label fw-bold" style="font-size:0.9rem; color: inherit;">
-    ${props.required ? '<span class="text-danger" style="margin-left:4px;">*</span>' : ""}${props.label}
+    ${requiredLabel(props.label, props.required)}
   </label>
   <div style="border: 1px solid #ced4da; border-radius: 6px; overflow:hidden;">
     <div style="background:#f3f4f6; border-bottom: 1px solid #ced4da; padding: 6px 12px; display:flex; gap:10px; font-size:0.8rem; color: inherit;">

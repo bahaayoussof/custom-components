@@ -120,25 +120,27 @@ Html.ViewData["AttachmentCardStyleRendered"] = true;
 @await Html.PartialAsync("UI/_StatusModal")
 
 <script>
-    function openAttachmentFromUrl(id, fileName, fileType) {
-        if (!id) {
-             showStatusModal({
-                type: 'info',
-                title: 'الملف غير متاح',
-            });
-            return;
-        }
+    if (typeof window.openAttachmentFromUrl === 'undefined') {
+        window.openAttachmentFromUrl = function (id, fileName, fileType) {
+            if (!id) {
+                 showStatusModal({
+                    type: 'info',
+                    title: 'الملف غير متاح',
+                });
+                return;
+            }
 
-        let url = `@actionUrl/${ id }`;
+            let url = `@actionUrl/${ id }`;
 
-        // Use the shared file viewer modal
-        if (typeof showFilePreview === 'function') {
-            showFilePreview(url, fileName, fileType);
-        } else if (window.openPdfViewer) {
-            window.openPdfViewer(url, fileName);
-        } else {
-            // Fallback: open in new tab
-            window.open(url, '_blank');
-        }
+            // Use the shared file viewer modal
+            if (typeof showFilePreview === 'function') {
+                showFilePreview(url, fileName, fileType);
+            } else if (window.openPdfViewer) {
+                window.openPdfViewer(url, fileName);
+            } else {
+                // Fallback: open in new tab
+                window.open(url, '_blank');
+            }
+        };
     }
 </script>

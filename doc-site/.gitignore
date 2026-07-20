@@ -7,6 +7,7 @@
 # Generated files
 .docusaurus
 .cache-loader
+/src/components/Playground/generated.js
 
 # Misc
 .DS_Store
