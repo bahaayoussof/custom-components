@@ -1,41 +1,45 @@
-# Website
+# Momah UI Components - Documentation Site
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator. It displays the documentation, playground, and source code of all UI components.
+
+## Architecture & Component Sync
+
+The source code and original markdown guides for the UI components live in the root directory of this repository (folders starting with `_` like `_Banner`, `_DateRange`, etc.). 
+
+A synchronization script (`scripts/sync-docs.js`) is used to automatically convert these root component directories into Docusaurus docs in `docs/components/`. It extracts:
+- Component guide markdown (`_*.md`)
+- C# Razor templates (`_*.cshtml`)
+- JavaScript/CSS source files
+- Screenshots and assets
+
+### Running Sync Separately
+If you make changes to any component files in the root folder, they must be synchronized to the documentation site. You can run:
+```bash
+npm run presync
+```
 
 ## Installation
 
+Install dependencies using npm:
 ```bash
-yarn
+npm install
 ```
 
 ## Local Development
 
+Start the local development server (which automatically runs the sync script first):
 ```bash
-yarn start
+npm start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
 ## Build
 
+To build the static production site (this also runs the sync script first):
 ```bash
-yarn build
+npm run build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+This command generates static content into the `build` directory.
 
-## Deployment
-
-Using SSH:
-
-```bash
-USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.

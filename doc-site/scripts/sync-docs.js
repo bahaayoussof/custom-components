@@ -491,15 +491,9 @@ title: "${name} Component"
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import Playground from '@site/src/components/Playground';
 
 <Tabs>
-<TabItem value="playground" label="Playground" default>
-
-<Playground componentName="${targetComponentName}" />
-
-</TabItem>
-<TabItem value="guide" label="Guide">
+<TabItem value="guide" label="Guide" default>
 
 ${mdContent}
 
@@ -538,12 +532,12 @@ ${codeContent}
   }
 });
 
-// Output all parsed templates for playground use
+// Output all parsed templates for playground use (disabled - output empty object)
 fs.writeFileSync(
   path.join(docSiteDir, "src/components/Playground/generated.js"),
-  `export const generatedComponents = ${JSON.stringify(generatedComponents, null, 2)};`,
+  `export const generatedComponents = {};`,
   "utf8",
 );
 console.log(
-  "Successfully generated real templates JS for Playground components.",
+  "Playground templates generation bypassed (disabled).",
 );
