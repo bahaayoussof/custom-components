@@ -1,10 +1,8 @@
 # Notification Component Usage
 
-## Overview
 The `_Notification.cshtml` component is a reusable notification/alert box component that displays an icon, title, and content message.
 
-## Location
-`LegalCasesWeb/Views/Shared/UI/_Notification.cshtml`
+![alt text](image.png)
 
 ## Parameters
 The component accepts a tuple with the following parameters:

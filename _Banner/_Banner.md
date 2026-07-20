@@ -2,6 +2,8 @@
 
 The Banner component is used to display important information or notifications with an optional icon and title in a stylized container.
 
+![alt text](image.png)
+
 ## Usage
 
 To use the banner, include the partial view in your page and provide the required model properties using a C# Tuple.

@@ -4,6 +4,10 @@ The `_DateRange` partial view provides a user-friendly date picker that supports
 
 ## Usage
 
+![alt text](image.png)
+![alt text](date-range.png)
+![alt text](invalid-date-range.png)
+
 To use the component, you can render the `UI/_DateRange` partial view using either `Html.PartialAsync` or the `<partial>` tag helper. Pass the required parameters as a tuple.
 
 ### Using Html.PartialAsync

@@ -1,5 +1,9 @@
 # Status Modal - Usage Guide
 
+![alt text](info.png)
+![alt text](success.png)
+![alt text](error.png)
+
 ## How to Use
 
 ### 1. Include the Partial in Your View
