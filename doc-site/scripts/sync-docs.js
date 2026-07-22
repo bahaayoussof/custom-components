@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const rootDir = path.join(__dirname, "../..");
+const componentsDir = path.join(__dirname, "../../components");
 const docSiteDir = path.join(__dirname, "..");
 const targetDocsDir = path.join(docSiteDir, "docs/components");
 
@@ -411,8 +411,8 @@ fs.writeFileSync(
   "utf8",
 );
 
-// Read all directories in the root
-const items = fs.readdirSync(rootDir, { withFileTypes: true });
+// Read all directories in components folder
+const items = fs.readdirSync(componentsDir, { withFileTypes: true });
 const generatedComponents = {};
 
 items.forEach((item) => {
@@ -422,7 +422,7 @@ items.forEach((item) => {
   // Filter for component directories (start with _ or is momah-table)
   if (!name.startsWith("_") && name !== "momah-table") return;
 
-  const componentSrcDir = path.join(rootDir, name);
+  const componentSrcDir = path.join(componentsDir, name);
   const targetComponentName = name.startsWith("_") ? name.substring(1) : name;
   const componentDestDir = path.join(targetDocsDir, targetComponentName);
 
