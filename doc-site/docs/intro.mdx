@@ -1,25 +1,91 @@
 ---
 sidebar_position: 1
-slug: /
+slug: /intro
 ---
 
 # Momah UI Components
 
-Welcome to the **Momah UI Components** documentation. This site compiles and documents all reusable ASP.NET Core Razor Partial Views (`.cshtml`) and custom JavaScript/CSS components designed for the Momah platform.
-
-## Architecture
-
-Each component is located in its own self-contained directory in the root repository. Each directory holds:
-- **Partial View (`_*.cshtml`)**: The Razor layout markup for the component.
-- **Documentation Guide (`_*.md`)**: Explains inputs, C# properties, and provides usage code snippets.
-- **Visual Previews (`*.png`)**: Screenshots of the component in different styles or states.
-
-## Automatic Tabbed Documentation
-
-To provide a seamless developer experience, this site automatically processes the component files and merges them. For each component, you will find:
-1. **Guide Tab**: The rendered markdown documentation with lists of parameters and usage examples.
-2. **Source Code Tab**: The actual C# Razor / HTML / JavaScript / CSS code from the component file, complete with syntax highlighting.
+Welcome to the **Momah UI Components** documentation. Momah Components is a production-grade library of enterprise UI components engineered specifically for ASP.NET MVC and ASP.NET Core applications.
 
 ---
 
-*Explore the available components by selecting them from the **Components** category in the sidebar!*
+## Key Features
+
+- ⚡ **ASP.NET MVC Native**: Direct Razor `@Html.Momah()` HtmlHelpers and `<momah-*>` TagHelpers with strong C# ViewModel lambda bindings.
+- 🌐 **First-Class LTR & RTL**: Native bidirectional engine built for seamless Arabic and multilingual enterprise applications.
+- ♿ **100% ARIA Accessible**: Full keyboard traps, focus indicators, and screen reader announcements compliant with WCAG 2.1 AA.
+- 🌙 **Automatic Dark Mode**: Built-in CSS custom properties (`--momah-*`) supporting light and dark themes dynamically.
+
+---
+
+## Component Architecture & Structure
+
+Every component is self-contained and offers unified client/server interaction:
+
+1. **Razor Markup (`_*.cshtml`)**: Clean, accessible markup rendered directly by ASP.NET View Engine.
+2. **C# Helper API**: Fluent builder syntax for ViewModel property binding, validation rules, and configuration hooks.
+3. **Styles & Scripts**: Modular CSS variables and zero-dependency Vanilla JS event handling.
+
+---
+
+## Component Library Overview
+
+### 📝 Form Controls
+High-performance inputs built for data entry, validation, and complex user selection.
+
+| Component | Description | Status |
+|---|---|---|
+| **DualDate** | Dual Hijri & Gregorian date selector with custom date constraints. | `NEW` |
+| **DateInput** | Standard single date picker with culture formatting. | `STABLE` |
+| **DateRange** | Preset range date selector (Today, Last 7 Days, Month to Date). | `STABLE` |
+| **InputField** | Formatted text input with icon slots and validation state. | `STABLE` |
+| **SelectInput** | Searchable dropdown selector with option grouping. | `STABLE` |
+| **MomahSelect** | Custom styled select control with dynamic AJAX data loading. | `STABLE` |
+| **FileUpload** | Drag-and-drop file uploader with progress tracking. | `STABLE` |
+| **AttachBox** | Compact file attachment container widget. | `STABLE` |
+| **TextArea** | Multi-line text input with auto-height and character counter. | `STABLE` |
+| **CkEditor** | Rich text WYSIWYG editor wrapper for Razor views. | `STABLE` |
+
+### 📊 Data Display
+Components designed for rendering structured server data cleanly.
+
+| Component | Description | Status |
+|---|---|---|
+| **MomahTable** | Server-side datagrid with sorting, filtering, and pagination. | `UPDATED` |
+| **Badge** | Status tag and category badge component. | `STABLE` |
+| **AttachmentCard** | Document preview card with download and deletion actions. | `STABLE` |
+
+### 💬 Overlays & Feedback
+Popovers, alerts, and modal dialogs for contextual user interaction.
+
+| Component | Description | Status |
+|---|---|---|
+| **Tooltip** | Contextual popover tooltip with smooth micro-animations. | `STABLE` |
+| **LabelTip** | Inline form label hint helper icon. | `STABLE` |
+| **Banner** | Full-width system notification alert banner. | `STABLE` |
+| **Notification** | Toast notification manager engine. | `STABLE` |
+| **StatusModal** | State feedback modal dialog with custom action buttons. | `STABLE` |
+
+### 🧩 Navigation
+| Component | Description | Status |
+|---|---|---|
+| **Breadcrumb** | Semantic breadcrumb trail component. | `STABLE` |
+
+---
+
+## Quick Example
+
+Render a component inside any Razor View (`.cshtml`):
+
+```cshtml
+@model UserProfileViewModel
+
+<!-- DualDate Picker Example -->
+@Html.Momah().DualDateFor(m => m.BirthDate)
+    .SetLabel("Date of Birth")
+    .SetMode(DualDateMode.HijriGregorian)
+    .SetRtl(true)
+    .Render()
+```
+
+Explore components from the **Components** category in the left sidebar or browse the [Components Gallery](/components)!

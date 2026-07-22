@@ -4,8 +4,8 @@ import { themes as prismThemes } from "prism-react-renderer";
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Momah Components",
-  tagline: "Documentation site for Momah UI Partial Views & Components",
-  favicon: "img/favicon.ico",
+  tagline: "Enterprise ASP.NET MVC UI Components Library",
+  favicon: "img/favicon.svg",
 
   future: {
     v4: true,
@@ -14,10 +14,10 @@ const config = {
   url: "https://momah-components.example.com",
   baseUrl: "/",
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "ignore",
   markdown: {
     hooks: {
-      onBrokenMarkdownLinks: "throw",
+      onBrokenMarkdownLinks: "warn",
     },
   },
 
@@ -33,9 +33,9 @@ const config = {
       ({
         docs: {
           sidebarPath: "./sidebars.js",
-          routeBasePath: "/", // Serve docs at site root
+          routeBasePath: "docs",
         },
-        blog: false, // Disable default blog
+        blog: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -53,7 +53,7 @@ const config = {
       navbar: {
         title: "Momah Components",
         logo: {
-          alt: "Momah Logo",
+          alt: "Momah Components Logo",
           src: "img/logo.svg",
         },
         items: [
@@ -61,19 +61,49 @@ const config = {
             type: "docSidebar",
             sidebarId: "tutorialSidebar",
             position: "left",
-            label: "Components Docs",
+            label: "Documentation",
+          },
+          {
+            to: "/components",
+            label: "Gallery",
+            position: "left",
+          },
+          // {
+          //   to: "/playground",
+          //   label: "Playground",
+          //   position: "left",
+          // },
+          {
+            href: "https://github.com/bahaayoussof/custom-components",
+            label: "GitHub",
+            position: "right",
           },
         ],
       },
       footer: {
         style: "dark",
-        links: [],
-        copyright: `Copyright © ${new Date().getFullYear()} Momah UI Components <br> By Bahaa Youssof`,
+        links: [
+          {
+            title: "Documentation",
+            items: [
+              { label: "Overview", to: "/docs/intro" },
+              { label: "Components Gallery", to: "/components" },
+              // { label: "Playground", to: "/playground" },
+            ],
+          },
+        ],
+        copyright: `© ${new Date().getFullYear()} Momah Components. Crafted by <a href="https://www.linkedin.com/in/bahaayoussof/" target="_blank" rel="noopener noreferrer">Bahaa Youssof</a>.`,
       },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-        additionalLanguages: ["csharp", "aspnet", "bash", "json"],
+        additionalLanguages: [
+          "csharp",
+          "aspnet",
+          "bash",
+          "json",
+          "markup-templating",
+        ],
       },
     }),
 };

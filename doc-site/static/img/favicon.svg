@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="momahGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+    <linearGradient id="momahLayer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#e0f2fe" stop-opacity="0.85" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="92" height="92" rx="26" fill="url(#momahGrad)" />
+  <g fill="url(#momahLayer)">
+    <rect x="22" y="26" width="15" height="48" rx="7.5" />
+    <rect x="63" y="26" width="15" height="48" rx="7.5" />
+    <path d="M 37 32 L 50 46 L 63 32 C 65 30 68 32 67 35 L 53 57 C 51 60 49 60 47 57 L 33 35 C 32 32 35 30 37 32 Z" />
+  </g>
+  <circle cx="50" cy="24" r="5" fill="#ffffff" />
+</svg>

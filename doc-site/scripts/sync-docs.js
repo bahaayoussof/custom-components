@@ -485,8 +485,8 @@ items.forEach((item) => {
 
     // Generate MDX content with Tabs
     let mdxContent = `---
-sidebar_label: "${name}"
-title: "${name} Component"
+sidebar_label: "${targetComponentName}"
+title: "${targetComponentName}"
 ---
 
 import Tabs from '@theme/Tabs';
