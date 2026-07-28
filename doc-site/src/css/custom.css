@@ -1,22 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap');
 
-/* --- MOMAH COMPONENTS DESIGN SYSTEM TOKENS --- */
-
+/* --- MOMAH DESIGN SYSTEM TOKENS --- */
 :root {
-  /* Font Families */
-  --momah-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --momah-font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --momah-font-display: 'Outfit', 'Inter', sans-serif;
-  --momah-font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --momah-font-code: 'JetBrains Mono', monospace;
 
-  /* Typography Scale */
   --ifm-font-family-base: var(--momah-font-body);
   --ifm-heading-font-family: var(--momah-font-display);
   --ifm-font-family-monospace: var(--momah-font-code);
 
-  /* Light Theme Colors */
+  /* Light Colors */
   --momah-bg-app: #f8fafc;
   --momah-bg-surface: #ffffff;
-  --momah-bg-elevated: #f1f5f9;
   --momah-bg-glass: rgba(255, 255, 255, 0.85);
 
   --momah-text-primary: #0f172a;
@@ -24,19 +20,11 @@
   --momah-text-muted: #64748b;
 
   --momah-brand-primary: #2563eb;
-  --momah-brand-primary-hover: #1d4ed8;
-  --momah-brand-accent: #0284c7;
   --momah-brand-primary-alpha: rgba(37, 99, 235, 0.08);
 
   --momah-border-subtle: #e2e8f0;
   --momah-border-strong: #cbd5e1;
 
-  --momah-status-success: #16a34a;
-  --momah-status-warning: #d97706;
-  --momah-status-danger: #dc2626;
-  --momah-status-info: #0284c7;
-
-  /* Infima Light Overrides */
   --ifm-color-primary: #2563eb;
   --ifm-color-primary-dark: #1d4ed8;
   --ifm-color-primary-darker: #1e40af;
@@ -48,39 +36,20 @@
   --ifm-navbar-background-color: var(--momah-bg-glass);
   --ifm-footer-background-color: #0f172a;
 
-  /* Radius Scale */
   --momah-radius-sm: 4px;
   --momah-radius-md: 8px;
   --momah-radius-lg: 12px;
-  --momah-radius-xl: 16px;
-  --momah-radius-full: 9999px;
 
-  /* Shadows */
   --momah-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --momah-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --momah-shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --momah-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
   --momah-shadow-glow: 0 0 20px rgba(37, 99, 235, 0.25);
 
-  /* Motion Tokens */
-  --momah-motion-fast: 100ms cubic-bezier(0, 0, 0.2, 1);
-  --momah-motion-base: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --momah-motion-moderate: 200ms cubic-bezier(0, 0, 0.2, 1);
-  --momah-motion-slow: 250ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Z-Index Matrix */
-  --momah-z-base: 0;
-  --momah-z-sticky: 100;
-  --momah-z-drawer: 200;
-  --momah-z-popover: 300;
-  --momah-z-modal: 400;
-  --momah-z-toast: 500;
+  --ifm-menu-link-sublist-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>');
 }
 
-/* Dark Theme Overrides */
 [data-theme='dark'] {
   --momah-bg-app: #090d16;
   --momah-bg-surface: #111827;
-  --momah-bg-elevated: #1f2937;
   --momah-bg-glass: rgba(17, 24, 39, 0.85);
 
   --momah-text-primary: #f8fafc;
@@ -88,23 +57,15 @@
   --momah-text-muted: #64748b;
 
   --momah-brand-primary: #3b82f6;
-  --momah-brand-primary-hover: #60a5fa;
-  --momah-brand-accent: #38bdf8;
   --momah-brand-primary-alpha: rgba(59, 130, 246, 0.15);
 
   --momah-border-subtle: #1e293b;
   --momah-border-strong: #334155;
 
-  --momah-status-success: #22c55e;
-  --momah-status-warning: #f59e0b;
-  --momah-status-danger: #ef4444;
-  --momah-status-info: #38bdf8;
-
-  /* Infima Dark Overrides */
   --ifm-color-primary: #3b82f6;
   --ifm-color-primary-dark: #2563eb;
   --ifm-color-primary-darker: #1d4ed8;
-  --ifm-color-primary-darkest: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
   --ifm-color-primary-light: #60a5fa;
   --ifm-color-primary-lighter: #93c5fd;
   --ifm-color-primary-lightest: #bfdbfe;
@@ -113,11 +74,11 @@
   --ifm-footer-background-color: #0b0f19;
 }
 
-/* Glassmorphism & Navbar Blur */
+/* --- NAVBAR & LAYOUT --- */
 .navbar {
   border-bottom: 1px solid var(--momah-border-subtle);
   box-shadow: var(--momah-shadow-sm);
-  transition: background-color var(--momah-motion-base), border-color var(--momah-motion-base);
+  transition: background-color 150ms ease, border-color 150ms ease;
 }
 
 .navbar__inner {
@@ -127,21 +88,16 @@
 
 .navbar-sidebar {
   background-color: var(--momah-bg-surface);
-  height: 100vh;
-  max-height: 100vh;
 }
 
-/* Accessibility Reduced Motion Rule */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
 
-/* --- MODERN SIDEBAR STYLING --- */
+/* --- SIDEBAR --- */
 .theme-doc-sidebar-container {
   border-right: 1px solid var(--momah-border-subtle) !important;
   background: var(--momah-bg-surface);
@@ -151,7 +107,6 @@
   padding: 1rem 0.75rem !important;
 }
 
-/* Category Label Headers */
 .theme-doc-sidebar-item-category > .menu__list-item-collapsible .menu__link {
   font-size: 0.85rem !important;
   font-weight: 700 !important;
@@ -159,30 +114,23 @@
   color: var(--momah-text-secondary) !important;
   padding: 0.5rem 0.75rem !important;
   border-radius: var(--momah-radius-md) !important;
-  transition: all var(--momah-motion-base) !important;
 }
 
-.theme-doc-sidebar-item-category > .menu__list-item-collapsible .menu__link:hover {
-  background: var(--momah-brand-primary-alpha) !important;
-  color: var(--momah-brand-primary) !important;
-}
-
-/* Link Items */
 .menu__link {
   font-size: 0.9rem !important;
   font-weight: 500 !important;
   color: var(--momah-text-muted) !important;
   border-radius: var(--momah-radius-md) !important;
   padding: 0.45rem 0.75rem !important;
-  transition: all var(--momah-motion-base) !important;
+  transition: all 150ms ease !important;
 }
 
-.menu__link:hover {
+.menu__link:hover,
+.theme-doc-sidebar-item-category > .menu__list-item-collapsible .menu__link:hover {
   background: var(--momah-brand-primary-alpha) !important;
   color: var(--momah-brand-primary) !important;
 }
 
-/* Active Link Highlight */
 .menu__link--active {
   background: var(--momah-brand-primary-alpha) !important;
   color: var(--momah-brand-primary) !important;
@@ -190,16 +138,11 @@
   border-left: 3px solid var(--momah-brand-primary) !important;
 }
 
-/* Modern Caret Arrow Overrides */
-:root {
-  --ifm-menu-link-sublist-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>');
-}
-
+/* Sidebar Caret Arrow */
 .menu__caret,
 .menu__link--sublist-caret {
   padding: 0.35rem !important;
   border-radius: var(--momah-radius-sm) !important;
-  transition: background-color var(--momah-motion-base) !important;
 }
 
 .menu__caret:hover,
@@ -208,75 +151,92 @@
 }
 
 .menu__caret::before,
-.menu__link--sublist-caret::after {
+.menu__link--sublist-caret::after,
+.menu__link--sublist::after {
   background: var(--momah-text-muted) !important;
   width: 1rem !important;
   height: 1rem !important;
-  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>') center/contain no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>') center/contain no-repeat !important;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>') center/contain no-repeat !important;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>') center/contain no-repeat !important;
   transform: rotate(0deg) !important;
-  transition: transform var(--momah-motion-base), background-color var(--momah-motion-base) !important;
+  transition: transform 150ms ease-in-out, background-color 150ms ease !important;
 }
 
-/* When category is OPENED (Expanded) */
+/* OPEN (Expanded) category state -> rotate 180deg (UP) */
 .menu__list-item:not(.menu__list-item--collapsed) > .menu__list-item-collapsible .menu__caret::before,
+.menu__list-item:not(.menu__list-item--collapsed) > .menu__list-item-collapsible .menu__link--sublist-caret::after,
+.menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist::after,
 .menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist-caret::after,
 .menu__link--sublist-caret[aria-expanded="true"]::after,
-button.menu__caret[aria-expanded="true"]::before,
-.menu__link--sublist[aria-expanded="true"]::after {
-  transform: rotate(90deg) !important;
+.menu__caret[aria-expanded="true"]::before,
+.menu__link--sublist[aria-expanded="true"]::after,
+[aria-expanded="true"] > .menu__caret::before,
+[aria-expanded="true"] > .menu__link--sublist-caret::after {
+  transform: rotate(180deg) !important;
   background: var(--momah-brand-primary) !important;
 }
 
-
-
-
-/* --- MODERN DOC CARDS & CATEGORY INDEX OVERRIDES --- */
-.cardContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocCard-styles-module,
-.cardContainer_Uaav,
-.cardContainer_iK5e,
+/* --- DOC CARDS --- */
 .theme-doc-card,
 article.card,
-.card {
+.card,
+[class*='cardContainer'] {
   background: var(--momah-bg-surface) !important;
   border: 1px solid var(--momah-border-subtle) !important;
   border-radius: var(--momah-radius-lg) !important;
   padding: 1.5rem !important;
   box-shadow: var(--momah-shadow-sm) !important;
-  transition: transform var(--momah-motion-base), border-color var(--momah-motion-base), box-shadow var(--momah-motion-base) !important;
+  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease !important;
   text-decoration: none !important;
 }
 
-.cardContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocCard-styles-module:hover,
-.cardContainer_Uaav:hover,
-.cardContainer_iK5e:hover,
 .theme-doc-card:hover,
 article.card:hover,
-.card:hover {
+.card:hover,
+[class*='cardContainer']:hover {
   transform: translateY(-4px) !important;
   border-color: var(--momah-brand-primary) !important;
   box-shadow: var(--momah-shadow-md), var(--momah-shadow-glow) !important;
 }
 
-.cardTitle_node_modules-\@docusaurus-theme-classic-lib-theme-DocCard-styles-module,
-.cardTitle_n4d3,
-.cardTitle_rR92,
-.card__title {
+.card__title,
+[class*='cardTitle'] {
   font-family: var(--momah-font-display) !important;
   font-size: 1.2rem !important;
   font-weight: 700 !important;
   color: var(--momah-text-primary) !important;
 }
 
-.cardDescription_node_modules-\@docusaurus-theme-classic-lib-theme-DocCard-styles-module,
-.cardDescription_Q_yS,
-.card__description {
+.card__description,
+[class*='cardDescription'] {
   font-size: 0.9rem !important;
   color: var(--momah-text-secondary) !important;
   line-height: 1.5 !important;
   margin-top: 0.5rem !important;
 }
 
+/* --- MOBILE TOC ARROW ROTATION --- */
+.theme-doc-toc-mobile button svg,
+.theme-doc-toc-mobile button::after,
+[class*='tocCollapsible'] button svg,
+[class*='tocCollapsible'] button::after,
+[class*='tocCollapsibleButton'] svg,
+[class*='tocCollapsibleButton']::after {
+  transform: rotate(90deg) !important;
+  transition: transform 0.2s ease-in-out !important;
+}
 
-
-
+.theme-doc-toc-mobile button[aria-expanded="true"] svg,
+.theme-doc-toc-mobile button[aria-expanded="true"]::after,
+[class*='tocCollapsible'][class*='Expanded'] button svg,
+[class*='tocCollapsible'][class*='Expanded'] button::after,
+[class*='tocCollapsible'] [aria-expanded="true"] svg,
+[class*='tocCollapsible'] [aria-expanded="true"]::after,
+[class*='tocCollapsibleButton'][aria-expanded="true"] svg,
+[class*='tocCollapsibleButton'][aria-expanded="true"]::after,
+[class*='tocCollapsibleButton'][class*='Expanded'] svg,
+[class*='tocCollapsibleButton'][class*='Expanded']::after,
+details[open] summary svg,
+details[open] summary::after {
+  transform: rotate(270deg) !important;
+}
