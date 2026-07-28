@@ -213,7 +213,7 @@ export default function Home() {
             <div>
               <div className={styles.cardHeader}>
                 <span className={styles.cardName}>DualDate</span>
-                <span className={styles.badge}>NEW v2.4</span>
+                <span className={styles.badge}>NEW</span>
               </div>
               <p className={styles.cardDesc}>
                 Dual Hijri & Gregorian date selector with custom range

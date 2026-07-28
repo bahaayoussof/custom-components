@@ -87,7 +87,7 @@ const config = {
             title: "Documentation",
             items: [
               { label: "Overview", to: "/docs/intro" },
-              { label: "Components Gallery", to: "/components" },
+              { label: "Gallery", to: "/components" },
               // { label: "Playground", to: "/playground" },
             ],
           },

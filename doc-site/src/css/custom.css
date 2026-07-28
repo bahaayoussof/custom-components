@@ -115,11 +115,20 @@
 
 /* Glassmorphism & Navbar Blur */
 .navbar {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--momah-border-subtle);
   box-shadow: var(--momah-shadow-sm);
   transition: background-color var(--momah-motion-base), border-color var(--momah-motion-base);
+}
+
+.navbar__inner {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.navbar-sidebar {
+  background-color: var(--momah-bg-surface);
+  height: 100vh;
+  max-height: 100vh;
 }
 
 /* Accessibility Reduced Motion Rule */
