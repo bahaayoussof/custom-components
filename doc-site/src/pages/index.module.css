@@ -36,39 +36,6 @@
   margin-bottom: 2rem;
 }
 
-.installBox {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--momah-bg-surface);
-  border: 1px solid var(--momah-border-strong);
-  border-radius: var(--momah-radius-md);
-  padding: 0.75rem 1rem;
-  font-family: var(--momah-font-code);
-  font-size: 0.9rem;
-  color: var(--momah-text-primary);
-  margin-bottom: 2rem;
-  box-shadow: var(--momah-shadow-sm);
-  width: fit-content;
-}
-
-.copyBtn {
-  background: var(--momah-brand-primary-alpha);
-  color: var(--momah-brand-primary);
-  border: none;
-  border-radius: var(--momah-radius-sm);
-  padding: 0.35rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--momah-motion-base);
-}
-
-.copyBtn:hover {
-  background: var(--momah-brand-primary);
-  color: #ffffff;
-}
-
 .ctaGroup {
   display: flex;
   gap: 1rem;
@@ -105,60 +72,6 @@
 .secondaryCta:hover {
   border-color: var(--momah-brand-primary);
   color: var(--momah-brand-primary) !important;
-}
-
-/* Widget Card */
-.heroWidget {
-  background: var(--momah-bg-surface);
-  border: 1px solid var(--momah-border-subtle);
-  border-radius: var(--momah-radius-xl);
-  overflow: hidden;
-  box-shadow: var(--momah-shadow-lg);
-}
-
-.widgetHeader {
-  display: flex;
-  background: var(--momah-bg-elevated);
-  border-bottom: 1px solid var(--momah-border-subtle);
-  padding: 0.5rem 1rem;
-  gap: 0.5rem;
-}
-
-.widgetTab {
-  background: transparent;
-  border: none;
-  color: var(--momah-text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 0.4rem 0.8rem;
-  border-radius: var(--momah-radius-sm);
-  cursor: pointer;
-  transition: all var(--momah-motion-base);
-}
-
-.widgetTabActive {
-  background: var(--momah-bg-surface);
-  color: var(--momah-brand-primary);
-  font-weight: 600;
-  box-shadow: var(--momah-shadow-sm);
-}
-
-.widgetStage {
-  padding: 2rem;
-  min-height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.widgetCode {
-  background: #090d16;
-  color: #38bdf8;
-  font-family: var(--momah-font-code);
-  font-size: 0.85rem;
-  padding: 1.25rem;
-  border-top: 1px solid var(--momah-border-subtle);
-  overflow-x: auto;
 }
 
 /* Section Common */
@@ -231,61 +144,6 @@
   gap: 1.5rem;
 }
 
-.componentCard {
-  background: var(--momah-bg-surface);
-  border: 1px solid var(--momah-border-subtle);
-  border-radius: var(--momah-radius-lg);
-  padding: 1.5rem;
-  text-decoration: none !important;
-  color: inherit !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform var(--momah-motion-base), border-color var(--momah-motion-base), box-shadow var(--momah-motion-base);
-}
-
-.componentCard:hover {
-  transform: translateY(-4px);
-  border-color: var(--momah-brand-primary);
-  box-shadow: var(--momah-shadow-md);
-}
-
-.cardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.cardName {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--momah-text-primary);
-}
-
-.badge {
-  background: var(--momah-brand-primary-alpha);
-  color: var(--momah-brand-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--momah-radius-full);
-}
-
-.cardDesc {
-  font-size: 0.9rem;
-  color: var(--momah-text-secondary);
-  line-height: 1.5;
-  margin-bottom: 1.25rem;
-}
-
-.cardBadges {
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--momah-text-muted);
-}
-
 /* Responsive */
 @media (max-width: 1024px) {
   .heroContainer {
@@ -334,3 +192,22 @@
   }
 }
 
+/* Gallery filter buttons */
+.filterBtn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--momah-radius-md);
+  border: 1px solid var(--momah-border-subtle);
+  background: var(--momah-bg-surface);
+  color: var(--momah-text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color var(--momah-motion-base), color var(--momah-motion-base), border-color var(--momah-motion-base);
+}
+
+.filterBtnActive {
+  background: var(--momah-brand-primary);
+  color: #ffffff;
+  font-weight: 600;
+  border-color: var(--momah-brand-primary);
+}

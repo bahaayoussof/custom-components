@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useColorMode } from "@docusaurus/theme-common";
 import { componentConfigs } from "./configs/index";
 import { generatedComponents } from "./generated";
@@ -113,7 +113,7 @@ export default function Playground({ componentName }) {
   }, []);
 
   // 3. Handle prop changes with validation
-  const handlePropChange = (name, value) => {
+  const handlePropChange = useCallback((name, value) => {
     const propConfig = config.props.find((p) => p.name === name);
     let errorMsg = null;
 
@@ -148,24 +148,31 @@ export default function Playground({ componentName }) {
       ...prev,
       [name]: value,
     }));
-  };
+  }, [config]);
 
-  // 4. Generate snippets
-  const razorCode = config.renderRazor ? config.renderRazor(propsState) : "";
-
-  const gen = config.useGeneratedMarkup && generatedComponents[componentName]
-    ? generatedComponents[componentName]
-    : null;
-  const rawHtmlCode =
-    gen && gen.markup
-      ? interpolate(gen.markup, propsState)
-      : config.renderHtml
-        ? config.renderHtml(propsState)
-        : "";
-  const htmlCode = rawHtmlCode.replace(
-    /@await\s+Html\.PartialAsync\s*\([^)]*\);?/gi,
-    "",
+  // 4. Generate snippets (memoized — prevents expensive re-computation on unrelated renders)
+  const gen = useMemo(
+    () =>
+      config.useGeneratedMarkup && generatedComponents[componentName]
+        ? generatedComponents[componentName]
+        : null,
+    [config, componentName],
   );
+
+  const razorCode = useMemo(
+    () => (config.renderRazor ? config.renderRazor(propsState) : ""),
+    [config, propsState],
+  );
+
+  const htmlCode = useMemo(() => {
+    const raw =
+      gen && gen.markup
+        ? interpolate(gen.markup, propsState)
+        : config.renderHtml
+          ? config.renderHtml(propsState)
+          : "";
+    return raw.replace(/@await\s+Html\.PartialAsync\s*\([^)]*\);?/gi, "");
+  }, [gen, config, propsState]);
 
   // Debounce iframe updates to prevent lag during fast typing/input changes
   const [debouncedParams, setDebouncedParams] = useState({
@@ -364,13 +371,13 @@ export default function Playground({ componentName }) {
   }, [debouncedParams]);
 
   // 6. Handle Copy to Clipboard
-  const handleCopy = () => {
+  const handleCopy = useCallback(() => {
     const textToCopy = activeCodeTab === "razor" ? razorCode : htmlCode;
     navigator.clipboard.writeText(textToCopy).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  };
+  }, [activeCodeTab, razorCode, htmlCode]);
 
   return (
     <div className="pg-container">
@@ -384,6 +391,8 @@ export default function Playground({ componentName }) {
             type="button"
             className={`pg-btn ${direction === "rtl" ? "pg-btn-active" : ""}`}
             onClick={() => setDirection("rtl")}
+            aria-label="Switch to RTL (Arabic) direction"
+            aria-pressed={direction === "rtl"}
           >
             RTL (عربي)
           </button>
@@ -391,6 +400,8 @@ export default function Playground({ componentName }) {
             type="button"
             className={`pg-btn ${direction === "ltr" ? "pg-btn-active" : ""}`}
             onClick={() => setDirection("ltr")}
+            aria-label="Switch to LTR (English) direction"
+            aria-pressed={direction === "ltr"}
           >
             LTR (English)
           </button>
@@ -410,17 +421,7 @@ export default function Playground({ componentName }) {
 
         {/* Props Controls sidebar */}
         <div className="pg-controls-pane">
-          <h6
-            style={{
-              margin: "0 0 1rem 0",
-              fontWeight: "bold",
-              fontSize: "0.85rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-            }}
-          >
-            Properties
-          </h6>
+          <h6 className="pg-controls-heading">Properties</h6>
           {config.props
             .filter((prop) => {
               if (prop.name === "maxFiles" && !propsState.multiple)
@@ -473,17 +474,11 @@ export default function Playground({ componentName }) {
                         }
                       />
                     ) : prop.type === "color" ? (
-                      <div style={{ display: "flex", gap: "8px" }}>
+                      <div className="pg-color-input-wrapper">
                         <input
                           type="color"
-                          style={{
-                            width: "40px",
-                            height: "32px",
-                            padding: "0",
-                            border: "1px solid var(--ifm-color-emphasis-300)",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                          }}
+                          className="pg-color-swatch"
+                          aria-label={`Color picker for ${prop.label || prop.name}`}
                           value={propsState[prop.name]}
                           onChange={(e) =>
                             handlePropChange(prop.name, e.target.value)
@@ -491,8 +486,7 @@ export default function Playground({ componentName }) {
                         />
                         <input
                           type="text"
-                          className={`pg-input ${errors[prop.name] ? "pg-input-error" : ""}`}
-                          style={{ flex: 1 }}
+                          className={`pg-input pg-color-input-text ${errors[prop.name] ? "pg-input-error" : ""}`}
                           value={propsState[prop.name]}
                           onChange={(e) =>
                             handlePropChange(prop.name, e.target.value)
@@ -546,8 +540,8 @@ export default function Playground({ componentName }) {
         </div>
         <div className="pg-tab-content">
           <div className="pg-code-container">
-            <button type="button" className="pg-copy-btn" onClick={handleCopy}>
-              {copied ? "Copied!" : "Copy"}
+            <button type="button" className="pg-copy-btn" onClick={handleCopy} aria-label="Copy code to clipboard">
+              {copied ? "Copied! ✓" : "Copy"}
             </button>
             <pre
               className={`language-${activeCodeTab === "razor" ? "cshtml" : "html"}`}

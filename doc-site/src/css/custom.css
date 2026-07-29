@@ -39,10 +39,25 @@
   --momah-radius-sm: 4px;
   --momah-radius-md: 8px;
   --momah-radius-lg: 12px;
+  --momah-radius-xl: 16px;
+  --momah-radius-full: 9999px;
 
   --momah-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --momah-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --momah-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --momah-shadow-glow: 0 0 20px rgba(37, 99, 235, 0.25);
+
+  --momah-motion-base: 200ms ease;
+  --momah-motion-slow: 350ms ease;
+
+  --momah-brand-primary-hover: #1d4ed8;
+  --momah-brand-accent: #38bdf8;
+  --momah-status-success: #16a34a;
+  --momah-status-error: #dc2626;
+  --momah-status-warning: #d97706;
+  --momah-status-info: #0284c7;
+
+  --momah-bg-elevated: #f1f5f9;
 
   --ifm-menu-link-sublist-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>');
 }
@@ -51,6 +66,7 @@
   --momah-bg-app: #090d16;
   --momah-bg-surface: #111827;
   --momah-bg-glass: rgba(17, 24, 39, 0.85);
+  --momah-bg-elevated: #1e293b;
 
   --momah-text-primary: #f8fafc;
   --momah-text-secondary: #94a3b8;
@@ -58,6 +74,7 @@
 
   --momah-brand-primary: #3b82f6;
   --momah-brand-primary-alpha: rgba(59, 130, 246, 0.15);
+  --momah-brand-primary-hover: #60a5fa;
 
   --momah-border-subtle: #1e293b;
   --momah-border-strong: #334155;
@@ -293,5 +310,8 @@ details[open] summary::after {
   margin-bottom: 1.25rem !important;
 }
 
-
+/* Hide external-link arrow icon on navbar href items (e.g. GitHub) */
+[class*='iconExternalLink'] {
+  display: none !important;
+}
 

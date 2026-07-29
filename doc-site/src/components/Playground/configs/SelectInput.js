@@ -1,4 +1,4 @@
-import { requiredLabel } from "./utils";
+import { renderFormFieldWrapper } from "./utils";
 
 export const SelectInput = {
   title: "_SelectInput",
@@ -47,14 +47,10 @@ ${props.optionsRaw
     const optsHtml = opts
       .map((o) => `<option value="${o}">${o}</option>`)
       .join("");
-    return `<div class="mb-3 w-100" style="max-width:400px; text-align:right;" dir="rtl">
-  <label for="${props.id}" class="form-label fw-bold" style="font-size:0.9rem; color: inherit;">
-    ${requiredLabel(props.label, props.required)}
-  </label>
-  <select class="form-select" id="${props.id}" ${props.required ? "required" : ""} style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ced4da; width:100%;">
+    const inner = `<select class="form-select" id="${props.id}" ${props.required ? "required" : ""} style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ced4da; width:100%;">
     <option value="" disabled selected>اختر خياراً...</option>
     ${optsHtml}
-  </select>
-</div>`;
+  </select>`;
+    return renderFormFieldWrapper(props.id, props.label, props.required, inner);
   },
 };

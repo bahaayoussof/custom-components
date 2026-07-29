@@ -1,4 +1,4 @@
-import { requiredLabel } from "./utils";
+import { requiredLabel, renderFormFieldWrapper } from "./utils";
 
 export const InputField = {
   title: "_InputField",
@@ -35,11 +35,7 @@ export const InputField = {
   renderRazor: (props) =>
     `@await Html.PartialAsync("~/Views/Shared/UI/_InputField.cshtml", ("${props.label}", ${props.required}, "${props.id}", "${props.placeholder}", "${props.type}"))`,
   renderHtml: (props) => {
-    return `<div class="mb-3 w-100" style="max-width:400px; text-align:right;" dir="rtl">
-  <label for="${props.id}" class="form-label fw-bold" style="font-size:0.9rem; color: inherit;">
-    ${requiredLabel(props.label, props.required)}
-  </label>
-  <input type="${props.type}" class="form-control" id="${props.id}" placeholder="${props.placeholder}" ${props.required ? "required" : ""} style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ced4da;">
-</div>`;
+    const inner = `<input type="${props.type}" class="form-control" id="${props.id}" placeholder="${props.placeholder}" ${props.required ? "required" : ""} style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ced4da;">`;
+    return renderFormFieldWrapper(props.id, props.label, props.required, inner);
   },
 };

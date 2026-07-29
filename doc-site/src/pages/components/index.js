@@ -256,22 +256,7 @@ export default function ComponentsGallery() {
               <button
                 key={cat}
                 onClick={() => setSelectedCat(cat)}
-                style={{
-                  padding: "0.5rem 1rem",
-                  borderRadius: "var(--momah-radius-md)",
-                  border: "1px solid var(--momah-border-subtle)",
-                  background:
-                    selectedCat === cat
-                      ? "var(--momah-brand-primary)"
-                      : "var(--momah-bg-surface)",
-                  color:
-                    selectedCat === cat
-                      ? "#ffffff"
-                      : "var(--momah-text-secondary)",
-                  fontWeight: selectedCat === cat ? "600" : "500",
-                  cursor: "pointer",
-                  fontSize: "0.85rem",
-                }}
+                className={`${styles.filterBtn} ${selectedCat === cat ? styles.filterBtnActive : ""}`}
               >
                 {cat}
               </button>

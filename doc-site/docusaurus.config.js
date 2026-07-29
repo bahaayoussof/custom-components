@@ -68,11 +68,6 @@ const config = {
             label: "Gallery",
             position: "left",
           },
-          // {
-          //   to: "/playground",
-          //   label: "Playground",
-          //   position: "left",
-          // },
           {
             href: "https://github.com/bahaayoussof/custom-components",
             label: "GitHub",
@@ -82,17 +77,7 @@ const config = {
       },
       footer: {
         style: "dark",
-        links: [
-          {
-            title: "Documentation",
-            items: [
-              { label: "Overview", to: "/docs/intro" },
-              { label: "Gallery", to: "/components" },
-              // { label: "Playground", to: "/playground" },
-            ],
-          },
-        ],
-        copyright: `© ${new Date().getFullYear()} Momah Components. Crafted by <a href="https://www.linkedin.com/in/bahaayoussof/" target="_blank" rel="noopener noreferrer">Bahaa Youssof</a>.`,
+        copyright: `© ${new Date().getFullYear()} Momah Components. Crafted by <a style={{textDecoration: none}} href="https://www.linkedin.com/in/bahaayoussof/" target="_blank" rel="noopener noreferrer">Bahaa Youssof</a>.`,
       },
       prism: {
         theme: prismThemes.github,

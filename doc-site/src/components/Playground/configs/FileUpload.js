@@ -1,4 +1,4 @@
-import { requiredLabel } from "./utils";
+import { renderFormFieldWrapper } from "./utils";
 
 export const FileUpload = {
   title: "_FileUpload",
@@ -52,15 +52,11 @@ export const FileUpload = {
     return `@await Html.PartialAsync("~/Views/Shared/UI/_FileUpload.cshtml", ("${props.label}", ${props.required}, "${props.id}", ${maxFilesVal}, new string[] { ${exts} }, ${props.maxSizeMb}))`;
   },
   renderHtml: (props) => {
-    return `<div class="mb-3 w-100" style="max-width:400px; text-align:right;" dir="rtl">
-  <label class="form-label fw-bold" style="font-size:0.9rem; color: inherit;">
-    ${requiredLabel(props.label, props.required)}
-  </label>
-  <div style="border: 2px dashed #00A79D; border-radius: 8px; padding: 2rem; background: #00A79D05; text-align: center; cursor: pointer;">
+    const inner = `<div style="border: 2px dashed #00A79D; border-radius: 8px; padding: 2rem; background: #00A79D05; text-align: center; cursor: pointer;">
     <i class="bi bi-cloud-upload" style="font-size: 2rem; color: #00A79D;"></i>
     <p style="margin: 8px 0 4px 0; font-size: 0.875rem; font-weight: 500; color: inherit;">اسحب الملف هنا أو انقر للاختيار</p>
     <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">الصيغ المدعومة: ${props.allowedExtensions} (بحد أقصى ${props.maxSizeMb} ميجابايت)</p>
-  </div>
-</div>`;
+  </div>`;
+    return renderFormFieldWrapper(props.id, props.label, props.required, inner);
   },
 };
