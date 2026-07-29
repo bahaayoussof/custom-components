@@ -209,13 +209,13 @@ export default function Home() {
         </div>
 
         <div className={styles.cardsGrid}>
-          <Link to="/docs/components/DualDate" className={styles.componentCard}>
+          <Link to="/docs/components/DualDate" className="momah-card">
             <div>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardName}>DualDate</span>
-                <span className={styles.badge}>NEW</span>
+              <div className="momah-card-header">
+                <h3 className="momah-card-title">DualDate</h3>
+                <span className="momah-card-status">NEW</span>
               </div>
-              <p className={styles.cardDesc}>
+              <p className="momah-card-desc">
                 Dual Hijri & Gregorian date selector with custom range
                 constraints.
               </p>
@@ -224,14 +224,14 @@ export default function Home() {
 
           <Link
             to="/docs/components/momah-table"
-            className={styles.componentCard}
+            className="momah-card"
           >
             <div>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardName}>MomahTable</span>
-                <span className={styles.badge}>UPDATED</span>
+              <div className="momah-card-header">
+                <h3 className="momah-card-title">MomahTable</h3>
+                <span className="momah-card-status">UPDATED</span>
               </div>
-              <p className={styles.cardDesc}>
+              <p className="momah-card-desc">
                 High performance server-side datagrid with sorting, filtering,
                 and pagination.
               </p>
@@ -240,14 +240,14 @@ export default function Home() {
 
           <Link
             to="/docs/components/MomahSelect"
-            className={styles.componentCard}
+            className="momah-card"
           >
             <div>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardName}>MomahSelect</span>
-                <span className={styles.badge}>STABLE</span>
+              <div className="momah-card-header">
+                <h3 className="momah-card-title">MomahSelect</h3>
+                <span className="momah-card-status">STABLE</span>
               </div>
-              <p className={styles.cardDesc}>
+              <p className="momah-card-desc">
                 Select input component with remote data fetching and
                 multi-select.
               </p>

@@ -203,9 +203,9 @@ export default function ComponentsGallery() {
       description="Browse all 19+ ASP.NET MVC UI components with live specs and feature badges."
     >
       <div
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "3rem 1rem" }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1rem" }}
       >
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+        <div style={{ textAlign: "start", marginBottom: "2.5rem" }}>
           <h1
             style={{
               fontFamily: "var(--momah-font-display)",
@@ -218,8 +218,7 @@ export default function ComponentsGallery() {
           <p
             style={{ color: "var(--momah-text-secondary)", fontSize: "1.1rem" }}
           >
-            Explore {COMPONENTS_DATA.length} ASP.NET MVC components equipped
-            with live specs, ARIA compliance, and native RTL support.
+            Explore {COMPONENTS_DATA.length} ASP.NET MVC components.
           </p>
         </div>
 
@@ -259,7 +258,7 @@ export default function ComponentsGallery() {
                 onClick={() => setSelectedCat(cat)}
                 style={{
                   padding: "0.5rem 1rem",
-                  borderRadius: "var(--momah-radius-full)",
+                  borderRadius: "var(--momah-radius-md)",
                   border: "1px solid var(--momah-border-subtle)",
                   background:
                     selectedCat === cat
@@ -283,87 +282,13 @@ export default function ComponentsGallery() {
         {/* CARDS GRID */}
         <div className={styles.galleryGrid}>
           {filtered.map((item) => (
-            <Link
-              key={item.id}
-              to={item.path}
-              style={{
-                background: "var(--momah-bg-surface)",
-                border: "1px solid var(--momah-border-subtle)",
-                borderRadius: "var(--momah-radius-lg)",
-                padding: "1.5rem",
-                textDecoration: "none",
-                color: "inherit",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxShadow: "var(--momah-shadow-sm)",
-                transition: "all var(--momah-motion-base)",
-              }}
-            >
+            <Link key={item.id} to={item.path} className="momah-card">
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontSize: "1.2rem",
-                      fontWeight: "700",
-                      color: "var(--momah-text-primary)",
-                    }}
-                  >
-                    {item.name}
-                  </h3>
-                  <span
-                    style={{
-                      background: "var(--momah-brand-primary-alpha)",
-                      color: "var(--momah-brand-primary)",
-                      fontSize: "0.75rem",
-                      fontWeight: "600",
-                      padding: "0.25rem 0.6rem",
-                      borderRadius: "var(--momah-radius-full)",
-                    }}
-                  >
-                    {item.status}
-                  </span>
+                <div className="momah-card-header">
+                  <h3 className="momah-card-title">{item.name}</h3>
+                  <span className="momah-card-status">{item.status}</span>
                 </div>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "var(--momah-text-secondary)",
-                    lineHeight: "1.5",
-                    marginBottom: "1.25rem",
-                  }}
-                >
-                  {item.desc}
-                </p>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  paddingTop: "0.75rem",
-                  borderTop: "1px solid var(--momah-border-subtle)",
-                  fontSize: "0.75rem",
-                  color: "var(--momah-text-muted)",
-                }}
-              >
-
-                <span
-                  style={{
-                    color: "var(--momah-brand-primary)",
-                    fontWeight: "600",
-                  }}
-                >
-                  View Specs →
-                </span>
+                <p className="momah-card-desc">{item.desc}</p>
               </div>
             </Link>
           ))}

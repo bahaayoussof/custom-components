@@ -240,3 +240,58 @@ details[open] summary svg,
 details[open] summary::after {
   transform: rotate(270deg) !important;
 }
+
+/* --- REUSABLE COMPONENT CARD STYLES --- */
+.momah-card {
+  background: var(--momah-bg-surface) !important;
+  border: 1px solid var(--momah-border-subtle) !important;
+  border-radius: var(--momah-radius-lg) !important;
+  padding: 1.3rem 1.3rem 0.7rem 1.3rem !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  box-shadow: var(--momah-shadow-sm) !important;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease !important;
+}
+
+.momah-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.15), 0 0 0 1px var(--momah-brand-primary) !important;
+  border-color: var(--momah-brand-primary) !important;
+}
+
+.momah-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.momah-card-title {
+  margin: 0 !important;
+  font-family: var(--momah-font-display) !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: var(--momah-text-primary) !important;
+}
+
+.momah-card-status {
+  background: var(--momah-brand-primary-alpha);
+  color: var(--momah-brand-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--momah-radius-sm);
+}
+
+.momah-card-desc {
+  font-size: 0.9rem !important;
+  color: var(--momah-text-secondary) !important;
+  line-height: 1.5 !important;
+  margin-bottom: 1.25rem !important;
+}
+
+
+
