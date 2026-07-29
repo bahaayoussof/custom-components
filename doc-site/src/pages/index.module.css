@@ -211,3 +211,125 @@
   font-weight: 600;
   border-color: var(--momah-brand-primary);
 }
+
+/* Code Snippet Window */
+.codeSnippetCard {
+  width: 100%;
+  max-width: 480px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: var(--momah-radius-lg);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  font-family: var(--momah-font-mono, "Fira Code", monospace);
+}
+
+.codeSnippetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.codeSnippetTab {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.copyBtn {
+  background: #334155;
+  color: #f8fafc;
+  border: none;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.copyBtn:hover {
+  background: #475569;
+}
+
+.codeSnippetBody {
+  margin: 0;
+  padding: 1.25rem 1.25rem;
+  background: #0f172a;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+
+/* Syntax Highlighting Tokens */
+.codeComment { color: #64748b; font-style: italic; }
+.codeKeyword { color: #f43f5e; font-weight: 600; }
+.codeClass { color: #38bdf8; }
+.codeMethod { color: #818cf8; }
+.codeString { color: #34d399; }
+.codeProp { color: #cbd5e1; }
+.codeBool { color: #fbbf24; }
+.codeNum { color: #f472b6; }
+
+
+/* Quick Stats Bar */
+.statsSection {
+  background: var(--momah-bg-surface);
+  border-bottom: 1px solid var(--momah-border-subtle);
+  padding: 1.75rem 1rem;
+}
+
+.statsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.statNumber {
+  font-family: var(--momah-font-display);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--momah-brand-primary);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--momah-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statDivider {
+  width: 1px;
+  height: 32px;
+  background: var(--momah-border-subtle);
+}
+
+@media (max-width: 768px) {
+  .statDivider {
+    display: none;
+  }
+  .statsContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+}
+
