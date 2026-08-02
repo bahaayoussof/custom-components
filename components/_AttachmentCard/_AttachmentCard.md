@@ -1,8 +1,12 @@
-# Attachment Card `_AttachmentCard`
-![Attachment Card](image.png)
-
-
 A UI component used to display a standardized card for a file attachment, showing its details and providing a built-in "preview" (عرض) button. It integrates directly with the generic `_FilePreview` modal for seamless viewing of supported document types (PDFs, Images, Word, Excel, etc.).
+
+## UI Preview
+
+| State   | Preview                     |
+| ------- | --------------------------- |
+| Default | ![Attachment Card](image.png)|
+
+---
 
 ## Location
 `Views/Shared/UI/_AttachmentCard.cshtml`

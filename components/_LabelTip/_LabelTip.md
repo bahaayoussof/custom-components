@@ -1,6 +1,12 @@
-# `_LabelTip` Component
-![alt text](image.png)
 Displays a label with an optional help tooltip icon. Supports two modes:
+
+## UI Preview
+
+| State   | Preview               |
+| ------- | --------------------- |
+| Default | ![alt text](image.png) |
+
+---
 
 1. **Explicit Mode:** Pass `Label` and `Tooltip` explicitly.
 2. **Auto-Truncate Mode:** Pass `content` and optional `digits`. It will automatically truncate words (or chars if a single word) and put the full string in the tooltip.

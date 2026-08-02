@@ -1,9 +1,13 @@
-# _FileUpload Component
-
-![_FileUpload](file-upload.png)
-![alt text](image.png)
-
 A reusable file upload component that supports drag-and-drop, client-side validation (file size, type, max count), and managing a list of uploaded files.
+
+## UI Preview
+
+| State     | Preview                         |
+| --------- | ------------------------------- |
+| Default   | ![_FileUpload](file-upload.png) |
+| File List | ![alt text](image.png)        |
+
+---
 
 ## Usage
 

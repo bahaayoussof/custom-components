@@ -1,9 +1,12 @@
-# Breadcrumb Component Usage Guide
-
-![_Breadcrumb](breadcrumb.png)
-
-## Overview
 The `_Breadcrumb.cshtml` is a reusable Razor component that displays a navigation breadcrumb trail using Bootstrap's breadcrumb component.
+
+## UI Preview
+
+| State   | Preview                      |
+| ------- | ---------------------------- |
+| Default | ![_Breadcrumb](breadcrumb.png) |
+
+---
 
 ## Model Structure
 The component expects a `List<(string Name, string Url)>` model where each item contains:

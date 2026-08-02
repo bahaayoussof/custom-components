@@ -1,6 +1,10 @@
-# _SelectInput
+## UI Preview
 
-![_SelectInput](select.png)
+| State   | Preview                 |
+| ------- | ----------------------- |
+| Default | ![_SelectInput](select.png) |
+
+---
 
 ```html
 @model (string Label, bool Required, string Id, string DefaultOptionText, List<(string Value, string Text)> Options)

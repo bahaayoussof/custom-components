@@ -1,12 +1,16 @@
-# DateRange Component
-
 The `_DateRange` partial view provides a user-friendly date picker that supports selecting a range of dates. It includes support for both Umm Al-Qura and Gregorian calendar systems.
 
-## Usage
+## UI Preview
 
-![alt text](image.png)
-![alt text](date-range.png)
-![alt text](invalid-date-range.png)
+| State         | Preview                             |
+| ------------- | ----------------------------------- |
+| Default       | ![alt text](image.png)              |
+| Date Range    | ![alt text](date-range.png)         |
+| Invalid Range | ![alt text](invalid-date-range.png) |
+
+---
+
+## Usage
 
 To use the component, you can render the `UI/_DateRange` partial view using either `Html.PartialAsync` or the `<partial>` tag helper. Pass the required parameters as a tuple.
 

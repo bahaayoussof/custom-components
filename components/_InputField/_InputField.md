@@ -1,7 +1,11 @@
-# _InputField
+## UI Preview
 
-![input-field](input-field.png)
-![input-field](group-inputs.png)
+| State        | Preview                           |
+| ------------ | --------------------------------- |
+| Single Input | ![input-field](input-field.png)   |
+| Group Inputs | ![input-field](group-inputs.png)  |
+
+---
 
 ```html
 @using System.Runtime.CompilerServices

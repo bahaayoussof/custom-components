@@ -1,6 +1,10 @@
-# _TextArea
+## UI Preview
 
-![_TextArea](_TextArea.png)
+| State   | Preview                 |
+| ------- | ----------------------- |
+| Default | ![_TextArea](_TextArea.png) |
+
+---
 
 ```html
 @model (string Label, bool Required, string Id, string Placeholder)

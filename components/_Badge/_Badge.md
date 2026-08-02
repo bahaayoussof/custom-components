@@ -1,9 +1,14 @@
-# `_Badge` Partial View Usage Guide
-![Badge](red.png)
-![Badge](sizes.png)
-![collection](image.png)
-
 The `_Badge.cshtml` partial view is a reusable UI component that displays a colored badge with optional text, a status dot, an icon, and customizable typography.
+
+## UI Preview
+
+| State      | Preview                  |
+| ---------- | ------------------------ |
+| Red Badge  | ![Badge](red.png)        |
+| Sizes      | ![Badge](sizes.png)      |
+| Collection | ![collection](image.png) |
+
+---
 
 ## Location
 `Views/Shared/UI/_Badge.cshtml`

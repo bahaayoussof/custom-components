@@ -1,10 +1,15 @@
-# _MomahSelect
-![single](single.png)
-![multi](multi.png)
-![single-filter](single-filter.png)
-![multi-filter](multi-filter.png)
-
 The `_MomahSelect.cshtml` is a custom, reusable dropdown component designed to replace the standard HTML `<select>`. It supports both single and multiple selections, searching/filtering, progressive enhancement, programmatic updates, and custom callbacks.
+
+## UI Preview
+
+| State         | Preview                         |
+| ------------- | ------------------------------- |
+| Single Select | ![single](single.png)           |
+| Multi Select  | ![multi](multi.png)             |
+| Single Filter | ![single-filter](single-filter.png)|
+| Multi Filter  | ![multi-filter](multi-filter.png)  |
+
+---
 
 ## Properties
 

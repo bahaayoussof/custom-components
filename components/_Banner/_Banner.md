@@ -1,8 +1,12 @@
-# Banner Component (`_Banner.cshtml`)
-
 The Banner component is used to display important information or notifications with an optional icon and title in a stylized container.
 
-![alt text](image.png)
+## UI Preview
+
+| State   | Preview               |
+| ------- | --------------------- |
+| Default | ![alt text](image.png) |
+
+---
 
 ## Usage
 

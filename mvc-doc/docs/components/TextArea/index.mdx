@@ -1,0 +1,89 @@
+---
+sidebar_label: "TextArea"
+title: "TextArea"
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Playground from '@site/src/components/Playground';
+
+<Tabs>
+<TabItem value="guide" label="Guide" default>
+
+## UI Preview
+
+| State   | Preview                 |
+| ------- | ----------------------- |
+| Default | ![_TextArea](./_TextArea.png) |
+
+---
+
+```html
+@model (string Label, bool Required, string Id, string Placeholder)
+@{
+var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص هنا" : Model.Placeholder;
+}
+<div class="mb-4">
+	<label class="form-label text-gray-700" for="@Model.Id">
+		@if (Model.Required)
+		{
+		<span class="text-danger">*</span>
+		}
+		@Model.Label
+	</label>
+	<textarea id="@Model.Id" class="form-control" style="height: 100px;" rows="3" placeholder="@placeholder"
+		@(Model.Required ? "required" : "" )></textarea>
+</div>
+```
+
+### How to use
+```cshtml
+<partial name="_TextAreaField" model='("عنصر مطلوب بقيمة توضيحيه", true, "my-custom-id-1", "عنصر مطلوب بقيمة توضيحيه")' />
+<partial name="_TextAreaField" model='("عنصر غير مطلوب بقيمة توضيحيه افتراضية", false, "my-custom-id-2", "")'
+	view-data='new ViewDataDictionary(ViewData) { { "Value", "القيمة الافتراضية" } }' />
+
+@await Html.PartialAsync("UI/_TextArea",
+		(Label: "Notes", Required: false, Id: "notes", Placeholder: ""),
+		new ViewDataDictionary(ViewData) { { "Value", "this is test text" } })
+
+
+```
+
+| Parameter | Type | Description | Default Value |
+| --- | --- | --- | --- |
+| Label | string | The label of the input field | "" |
+| Required | bool | Whether the input field is required or not | false |
+| Id | string | The ID of the input field | "" |
+| Placeholder | string | The placeholder of the input field | "" |
+
+
+</TabItem>
+<TabItem value="playground" label="Playground">
+
+<Playground componentName="TextArea" />
+
+</TabItem>
+<TabItem value="_TextArea.cshtml" label="_TextArea.cshtml">
+
+```cshtml
+@model (string Label, bool Required, string Id, string Placeholder)
+@{
+    var placeholder = string.IsNullOrEmpty(Model.Placeholder) ? "يكتب النص هنا" : Model.Placeholder;
+    var value = ViewData["Value"] as string ?? " ";
+}
+<div class="mb-4">
+	<label class="form-label text-gray-700" for="@Model.Id">
+		@if (Model.Required)
+		{
+		<span class="text-danger">*</span>
+		}
+		@Model.Label
+	</label>
+	<textarea id="@Model.Id" class="form-control" style="height: 100px;" rows="3" placeholder="@placeholder"
+		@(Model.Required ? "required" : "" )>@value</textarea>
+</div>
+
+```
+
+</TabItem>
+</Tabs>

@@ -1,5 +1,3 @@
-# `_Tooltip.cshtml` — Reusable Tooltip Partial
-
 > **Location:** `Views/Shared/UI/_Tooltip.cshtml`
 
 A self-contained hover tooltip for ASP.NET Core Razor views.
@@ -7,10 +5,12 @@ Supports rich HTML content, multiple placements, RTL/LTR layouts, and auto viewp
 
 ---
 
-## Visual Preview
+## UI Preview
 
-![alt text](image.png)
-![alt text](image-1.png)
+| State   | Preview               |
+| ------- | --------------------- |
+| Default | ![alt text](image.png)  |
+| Open    | ![alt text](image-1.png)|
 
 ---
 

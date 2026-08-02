@@ -1,7 +1,12 @@
-# _AttachBox Partial
-![alt text](image.png)
-
 The `_AttachBox` partial view provides a consistent UI element for displaying and interacting with an attached file. It displays the file's name alongside an automatically determined icon representing its format, and offers standard actions like previewing and downloading the file directly.
+
+## UI Preview
+
+| State   | Preview               |
+| ------- | --------------------- |
+| Default | ![alt text](image.png) |
+
+---
 
 ## Properties
 

@@ -1,8 +1,12 @@
-# Status Modal - Usage Guide
+## UI Preview
 
-![alt text](info.png)
-![alt text](success.png)
-![alt text](error.png)
+| State   | Preview             |
+| ------- | ------------------- |
+| Info    | ![alt text](info.png)   |
+| Success | ![alt text](success.png)|
+| Error   | ![alt text](error.png)  |
+
+---
 
 ## How to Use
 
@@ -106,10 +110,3 @@ showStatusModal({
 | actionButtonText | string | The text of the action button | 'تأكيد' |
 | onConfirm | function | The callback function when the confirm button is clicked | null |
 | onCancel | function | The callback function when the cancel button is clicked | null |
-
-## Screenshots
-![alt text](success.png)
-
-![alt text](info.png)
-
-![alt text](error.png)

@@ -1,5 +1,3 @@
-# \_DualDate Partial View Documentation
-
 Dual-segment date picker. Displays Hijri and Gregorian dates side by side. Supports optional date range limits.
 
 ## UI Preview

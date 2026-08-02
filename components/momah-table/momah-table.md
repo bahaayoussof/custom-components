@@ -1,11 +1,13 @@
-# MomahTable.js - Simple Table Component
-
 A lightweight, dependency-free JavaScript component for rendering dynamic HTML tables with pagination, search, and filtering.
 
----
+## UI Preview
 
-![alt text](image.png)
-![alt text](image-1.png)
+| State         | Preview               |
+| ------------- | --------------------- |
+| Default Table | ![alt text](image.png)  |
+| Filtered View | ![alt text](image-1.png)|
+
+---
 
 ## Quick Start (3 Steps)
 

@@ -1,12 +1,13 @@
-# Date Input Component Usage Guide
-
-![input-field](gregorian.png)
-![input-field](hijri.png)
-
-
-## Overview
-
 The `_DateInput.cshtml` is a reusable Razor partial view component that creates a styled date input field with calendar popup functionality. It supports both Ummalqura (Hijri) and Gregorian calendar systems.
+
+## UI Preview
+
+| State     | Preview                       |
+| --------- | ----------------------------- |
+| Gregorian | ![input-field](gregorian.png) |
+| Hijri     | ![input-field](hijri.png)     |
+
+---
 
 ## Component Features
 
