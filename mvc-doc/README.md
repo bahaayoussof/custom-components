@@ -1,45 +1,149 @@
-# Momah UI Components - Documentation Site
+# Momah UI Components
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator. It displays the documentation, playground, and source code of all UI components.
+A modern, reusable, and customizable UI component library with an interactive documentation website built using Docusaurus.
 
-## Architecture & Component Sync
+The project is designed to simplify building consistent web applications by providing production-ready UI components, live playgrounds, implementation guides, and source code examples.
 
-The source code and original markdown guides for the UI components live in the root directory of this repository (folders starting with `_` like `_Banner`, `_DateRange`, etc.). 
+## ✨ Features
 
-A synchronization script (`scripts/sync-docs.js`) is used to automatically convert these root component directories into Docusaurus docs in `docs/components/`. It extracts:
-- Component guide markdown (`_*.md`)
-- C# Razor templates (`_*.cshtml`)
-- JavaScript/CSS source files
-- Screenshots and assets
+- 📚 Interactive documentation
+- 🎮 Live playground for components
+- 💻 View complete source code
+- 📝 Step-by-step implementation guides
+- 🎨 Reusable UI components
+- ⚡ Automatic documentation synchronization
+- 🔍 Component search
+- 📱 Responsive documentation website
 
-### Running Sync Separately
-If you make changes to any component files in the root folder, they must be synchronized to the documentation site. You can run:
+---
+
+## Project Structure
+
+```
+/
+├── _Banner/
+├── _DateRange/
+├── _Tooltip/
+├── docs/
+├── src/
+├── scripts/
+└── docusaurus.config.ts
+```
+
+Each component lives inside its own root directory (`_ComponentName`).
+
+A component typically contains:
+
+- Documentation
+- Razor template
+- JavaScript
+- CSS / SCSS
+- Assets (images, icons)
+
+---
+
+## Documentation Sync
+
+Instead of maintaining documentation manually, this project automatically synchronizes component files into the Docusaurus documentation.
+
+The synchronization script extracts:
+
+- Markdown documentation
+- Razor (.cshtml)
+- JavaScript
+- CSS / SCSS
+- Images and assets
+
+and generates the documentation under:
+
+```
+docs/components/
+```
+
+Run manually:
+
 ```bash
 npm run presync
 ```
 
-## Installation
+The sync process also runs automatically before:
 
-Install dependencies using npm:
-```bash
-npm install
-```
-
-## Local Development
-
-Start the local development server (which automatically runs the sync script first):
 ```bash
 npm start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+and
 
-## Build
-
-To build the static production site (this also runs the sync script first):
 ```bash
 npm run build
 ```
 
-This command generates static content into the `build` directory.
+---
 
+## Installation
+
+```bash
+npm install
+```
+
+---
+
+## Local Development
+
+```bash
+npm start
+```
+
+Starts the local development server and automatically synchronizes all component documentation.
+
+---
+
+## Production Build
+
+```bash
+npm run build
+```
+
+Builds the static documentation website.
+
+---
+
+## Tech Stack
+
+- Docusaurus
+- React
+- TypeScript
+- MDX
+- Sass
+- Prism
+- Node.js
+
+---
+
+## Contributing
+
+Contributions are welcome.
+
+If you'd like to improve the documentation, fix bugs, or add new components:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a Pull Request
+
+---
+
+## Roadmap
+
+- [ ] More UI Components
+- [ ] Dark / Light theme improvements
+- [ ] AI component search
+- [ ] Better playground customization
+- [ ] Accessibility improvements
+- [ ] Versioned documentation
+
+---
+
+## License
+
+MIT License
