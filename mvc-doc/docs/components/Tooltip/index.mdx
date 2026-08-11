@@ -5,11 +5,9 @@ title: "Tooltip"
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import Playground from '@site/src/components/Playground';
 
 <Tabs>
 <TabItem value="guide" label="Guide" default>
-
 > **Location:** `Views/Shared/UI/_Tooltip.cshtml`
 
 A self-contained hover tooltip for ASP.NET Core Razor views.
@@ -205,13 +203,9 @@ maxHeight = "300px"   @* default is 500px *@
 > [!NOTE]
 > The outer wrapper uses `position: relative` and `z-index: 10` at rest, rising to `99999` on hover. Make sure parent containers do **not** have `overflow: hidden` or a lower `z-index` that clips the bubble.
 
-
 </TabItem>
-<TabItem value="playground" label="Playground">
 
-<Playground componentName="Tooltip" />
 
-</TabItem>
 <TabItem value="_Tooltip.cshtml" label="_Tooltip.cshtml">
 
 ```cshtml

@@ -5,11 +5,9 @@ title: "FileUpload"
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import Playground from '@site/src/components/Playground';
 
 <Tabs>
 <TabItem value="guide" label="Guide" default>
-
 A reusable file upload component that supports drag-and-drop, client-side validation (file size, type, max count), and managing a list of uploaded files.
 
 ## UI Preview
@@ -76,13 +74,9 @@ The model is a `ValueTuple` requiring specific order.
 | **5** | `AllowedFileTypes` | `string[]` | (Optional) Array of allowed MIME types. Null allows all. | `new[] &#123; "application/pdf" &#125;` |
 | **6** | `MaxFileSize` | `double` | (Optional) Maximum file size in MB. Default is 5 MB. | `10` or `2.5` |
 
-
 </TabItem>
-<TabItem value="playground" label="Playground">
 
-<Playground componentName="FileUpload" />
 
-</TabItem>
 <TabItem value="_FileUpload.cshtml" label="_FileUpload.cshtml">
 
 ```cshtml

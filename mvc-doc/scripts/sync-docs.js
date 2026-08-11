@@ -494,10 +494,10 @@ import TabItem from '@theme/TabItem';
 
 <Tabs>
 <TabItem value="guide" label="Guide" default>
-
 ${mdContent}
-
 </TabItem>
+
+
 `;
 
     // Add Code Tabs
@@ -538,6 +538,4 @@ fs.writeFileSync(
   `export const generatedComponents = {};`,
   "utf8",
 );
-console.log(
-  "Playground templates generation bypassed (disabled).",
-);
+console.log("Playground templates generation bypassed (disabled).");

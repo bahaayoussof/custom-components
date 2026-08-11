@@ -17,6 +17,7 @@ const sidebars = {
         { type: "doc", id: "components/DateInput/index", label: "DateInput" },
         { type: "doc", id: "components/DateRange/index", label: "DateRange" },
         { type: "doc", id: "components/InputField/index", label: "InputField" },
+        { type: "doc", id: "components/AutoComplete/index", label: "AutoComplete" },
         { type: "doc", id: "components/SelectInput/index", label: "SelectInput" },
         { type: "doc", id: "components/MomahSelect/index", label: "MomahSelect" },
         { type: "doc", id: "components/FileUpload/index", label: "FileUpload" },

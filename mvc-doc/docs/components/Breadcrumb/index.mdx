@@ -5,11 +5,9 @@ title: "Breadcrumb"
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import Playground from '@site/src/components/Playground';
 
 <Tabs>
 <TabItem value="guide" label="Guide" default>
-
 The `_Breadcrumb.cshtml` is a reusable Razor component that displays a navigation breadcrumb trail using Bootstrap's breadcrumb component.
 
 ## UI Preview
@@ -77,13 +75,9 @@ public IActionResult MyPage()
 - The separator between items is `>` (defined by `--bs-breadcrumb-divider`)
 - The last item should typically have an empty URL or the current page URL to indicate it's the active location
 
-
 </TabItem>
-<TabItem value="playground" label="Playground">
 
-<Playground componentName="Breadcrumb" />
 
-</TabItem>
 <TabItem value="_Breadcrumb.cshtml" label="_Breadcrumb.cshtml">
 
 ```cshtml

@@ -41,6 +41,15 @@ const COMPONENTS_DATA = [
     path: "/docs/components/InputField",
   },
   {
+    id: "AutoComplete",
+    name: "AutoComplete",
+    category: "Form Controls",
+    desc: "Enterprise-grade AutoComplete & Search Select with local/remote data sources.",
+    status: "NEW",
+    aria: true,
+    path: "/docs/components/AutoComplete",
+  },
+  {
     id: "SelectInput",
     name: "SelectInput",
     category: "Form Controls",

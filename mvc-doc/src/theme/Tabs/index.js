@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import clsx from 'clsx';
-import { ThemeClassNames } from '@docusaurus/theme-common';
+import React, { useEffect } from "react";
+import clsx from "clsx";
+import { ThemeClassNames } from "@docusaurus/theme-common";
 import {
   useScrollPositionBlocker,
   useTabsContextValue,
   useTabs,
   sanitizeTabsChildren,
   TabsProvider,
-} from '@docusaurus/theme-common/internal';
-import useIsBrowser from '@docusaurus/useIsBrowser';
-import styles from './styles.module.css';
+} from "@docusaurus/theme-common/internal";
+import useIsBrowser from "@docusaurus/useIsBrowser";
+import styles from "./styles.module.css";
 
 function TabsTocController() {
   const isBrowser = useIsBrowser();
@@ -18,18 +18,18 @@ function TabsTocController() {
   useEffect(() => {
     if (!isBrowser) return;
 
-    const isGuide = !selectedValue || selectedValue === 'guide';
+    const isGuide = !selectedValue || selectedValue === "guide";
     if (isGuide) {
-      document.body.classList.remove('hide-toc-sidebar');
-      document.documentElement.setAttribute('data-tab-value', 'guide');
+      document.body.classList.remove("hide-toc-sidebar");
+      document.documentElement.setAttribute("data-tab-value", "guide");
     } else {
-      document.body.classList.add('hide-toc-sidebar');
-      document.documentElement.setAttribute('data-tab-value', selectedValue);
+      document.body.classList.add("hide-toc-sidebar");
+      document.documentElement.setAttribute("data-tab-value", selectedValue);
     }
 
     return () => {
-      document.body.classList.remove('hide-toc-sidebar');
-      document.documentElement.removeAttribute('data-tab-value');
+      document.body.classList.remove("hide-toc-sidebar");
+      document.documentElement.removeAttribute("data-tab-value");
     };
   }, [selectedValue, isBrowser]);
 
@@ -39,7 +39,8 @@ function TabsTocController() {
 function TabList({ className }) {
   const { selectedValue, selectValue, tabValues, block } = useTabs();
   const tabRefs = [];
-  const { blockElementScrollPositionUntilNextRender } = useScrollPositionBlocker();
+  const { blockElementScrollPositionUntilNextRender } =
+    useScrollPositionBlocker();
 
   const handleTabChange = (event) => {
     const newTab = event.currentTarget;
@@ -54,16 +55,16 @@ function TabList({ className }) {
   const handleKeydown = (event) => {
     let focusElement = null;
     switch (event.key) {
-      case 'Enter': {
+      case "Enter": {
         handleTabChange(event);
         break;
       }
-      case 'ArrowRight': {
+      case "ArrowRight": {
         const nextTab = tabRefs.indexOf(event.currentTarget) + 1;
         focusElement = tabRefs[nextTab] ?? tabRefs[0];
         break;
       }
-      case 'ArrowLeft': {
+      case "ArrowLeft": {
         const prevTab = tabRefs.indexOf(event.currentTarget) - 1;
         focusElement = tabRefs[prevTab] ?? tabRefs[tabRefs.length - 1];
         break;
@@ -79,12 +80,13 @@ function TabList({ className }) {
       role="tablist"
       aria-orientation="horizontal"
       className={clsx(
-        'tabs',
+        "tabs",
         {
-          'tabs--block': block,
+          "tabs--block": block,
         },
         className,
-      )}>
+      )}
+    >
       {tabValues.map(({ value, label, attributes }) => (
         <li
           role="tab"
@@ -97,9 +99,10 @@ function TabList({ className }) {
           onKeyDown={handleKeydown}
           onClick={handleTabChange}
           {...attributes}
-          className={clsx('tabs__item', styles.tabItem, attributes?.className, {
-            'tabs__item--active': selectedValue === value,
-          })}>
+          className={clsx("tabs__item", styles.tabItem, attributes?.className, {
+            "tabs__item--active": selectedValue === value,
+          })}
+        >
           {label ?? value}
         </li>
       ))}
@@ -116,9 +119,10 @@ function TabsContainer({ className, children }) {
     <div
       className={clsx(
         ThemeClassNames.tabs.container,
-        'tabs-container',
+        "tabs-container",
         styles.tabList,
-      )}>
+      )}
+    >
       <TabsTocController />
       <TabList className={className} />
       <TabContent>{children}</TabContent>
@@ -128,18 +132,11 @@ function TabsContainer({ className, children }) {
 
 export default function Tabs(props) {
   const isBrowser = useIsBrowser();
-  const childrenArray = React.Children.toArray(props.children);
-  const filteredChildren = childrenArray.filter(
-    (child) => !(child && child.props && child.props.value === 'playground')
-  );
-  const modifiedProps = { ...props, children: filteredChildren };
-  const value = useTabsContextValue(modifiedProps);
+  const value = useTabsContextValue(props);
   return (
-    <TabsProvider
-      value={value}
-      key={String(isBrowser)}>
+    <TabsProvider value={value} key={String(isBrowser)}>
       <TabsContainer className={props.className}>
-        {sanitizeTabsChildren(filteredChildren)}
+        {sanitizeTabsChildren(props.children)}
       </TabsContainer>
     </TabsProvider>
   );

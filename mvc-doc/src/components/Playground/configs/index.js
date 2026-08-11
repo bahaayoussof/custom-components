@@ -7,6 +7,7 @@ import { Breadcrumb } from "./Breadcrumb";
 import { InputField } from "./InputField";
 import { TextArea } from "./TextArea";
 import { SelectInput } from "./SelectInput";
+import { AutoComplete } from "./AutoComplete";
 import { MomahSelect } from "./MomahSelect";
 import { DateInput } from "./DateInput";
 import { DateRange } from "./DateRange";
@@ -27,6 +28,7 @@ export const componentConfigs = {
   Breadcrumb,
   InputField,
   TextArea,
+  AutoComplete,
   SelectInput,
   MomahSelect,
   DateInput,
