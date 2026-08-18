@@ -68,6 +68,15 @@ const COMPONENTS_DATA = [
     path: "/docs/components/MomahSelect",
   },
   {
+    id: "ChipSelect",
+    name: "ChipSelect",
+    category: "Form Controls",
+    desc: "Multi-select dropdown with dismissible chips and live search.",
+    status: "NEW",
+    aria: true,
+    path: "/docs/components/ChipSelect",
+  },
+  {
     id: "FileUpload",
     name: "FileUpload",
     category: "Form Controls",

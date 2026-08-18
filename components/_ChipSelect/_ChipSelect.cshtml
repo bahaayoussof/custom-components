@@ -1,0 +1,1122 @@
+
+@using System.Text.Json
+@using Microsoft.AspNetCore.Routing
+@model dynamic
+
+@{
+    string elementId = $"cs_{Guid.NewGuid().ToString("N")[..8]}";
+    string name = "SelectedIds";
+    string label = "";
+    string placeholder = "اختر عناصر...";
+    string searchPlaceholder = "بحث...";
+    string searchAriaLabel = "";
+    bool showImages = true;
+    bool allowSearch = true;
+    bool allowSelectAll = true;
+    bool allowClear = true;
+    string selectAllText = "تحديد الكل";
+    bool closeOnSelect = false;
+    object? maxSelections = null;
+    object rawItems = new List<object>();
+    object rawSelected = new List<object>();
+
+    if (Model != null)
+    {
+        var dict = new RouteValueDictionary(Model);
+        if (dict.TryGetValue("id", out var idVal) && idVal != null) elementId = idVal.ToString()!;
+        if (dict.TryGetValue("name", out var nmVal) && nmVal != null) name = nmVal.ToString()!;
+        if (dict.TryGetValue("label", out var lblVal) && lblVal != null) label = lblVal.ToString()!;
+        if (dict.TryGetValue("placeholder", out var phVal) && phVal != null) placeholder = phVal.ToString()!;
+        if (dict.TryGetValue("searchPlaceholder", out var sphVal) && sphVal != null) searchPlaceholder = sphVal.ToString()!;
+        if (dict.TryGetValue("searchAriaLabel", out var salVal) && salVal != null) searchAriaLabel = salVal.ToString()!;
+        if (dict.TryGetValue("selectAllText", out var satVal) && satVal != null) selectAllText = satVal.ToString()!;
+        if (dict.TryGetValue("showImages", out var siVal) && siVal is bool si) showImages = si;
+        if (dict.TryGetValue("searchable", out var sVal) && sVal is bool sB) allowSearch = sB;
+        if (dict.TryGetValue("allowSearch", out var asVal) && asVal is bool asB) allowSearch = asB;
+        if (dict.TryGetValue("allowSelectAll", out var asaVal) && asaVal is bool asaB) allowSelectAll = asaB;
+        if (dict.TryGetValue("clearable", out var clrVal) && clrVal is bool clrB) allowClear = clrB;
+        if (dict.TryGetValue("allowClear", out var acVal) && acVal is bool acB) allowClear = acB;
+        if (dict.TryGetValue("closeOnSelect", out var cosVal) && cosVal is bool cos) closeOnSelect = cos;
+        if (dict.TryGetValue("maxSelections", out var msVal)) maxSelections = msVal;
+        if (dict.TryGetValue("items", out var itemsVal) && itemsVal != null) rawItems = itemsVal;
+        if (dict.TryGetValue("selectedValues", out var selVal) && selVal != null) rawSelected = selVal;
+    }
+
+    // Default JSON encoder escapes <, >, & — safe to embed in <script>, blocks </script> injection.
+    var jsonOptions = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+    string itemsJson = JsonSerializer.Serialize(rawItems, jsonOptions);
+    string selectedJson = JsonSerializer.Serialize(rawSelected, jsonOptions);
+    string elementIdJson = JsonSerializer.Serialize(elementId, jsonOptions);
+}
+
+<!-- Target Container Element -->
+<div id="@elementId"
+     class="chip-select"
+     data-name="@name"
+     data-label="@label"
+     data-placeholder="@placeholder"
+     data-search-placeholder="@searchPlaceholder"
+     data-search-aria-label="@searchAriaLabel"
+     data-select-all-text="@selectAllText"
+     data-show-images="@showImages.ToString().ToLower()"
+     data-allow-search="@allowSearch.ToString().ToLower()"
+     data-allow-select-all="@allowSelectAll.ToString().ToLower()"
+     data-allow-clear="@allowClear.ToString().ToLower()"
+     data-close-on-select="@closeOnSelect.ToString().ToLower()"
+     data-max-selections="@(maxSelections?.ToString() ?? "")">
+</div>
+
+<!-- Embedded JS Class & Instantiation -->
+<script>
+    // Inject styles once per page, regardless of instance count.
+    if (!document.documentElement.classList.contains('cs-css-injected')) {
+        document.documentElement.classList.add('cs-css-injected');
+        (function () {
+            const s = document.createElement('style');
+            s.setAttribute('data-cs', '1');
+            s.textContent = `
+    .cs-wrapper{position:relative;font-family:inherit;width:100%;box-sizing:border-box}
+    .cs-label{display:block;font-size:.9rem;font-weight:600;margin-bottom:.4rem;color:#334155;cursor:pointer;user-select:none}
+    .cs-control{position:relative;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:.5rem .85rem;background-color:#fff;border:1px solid #cbd5e1;border-radius:8px;cursor:pointer;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out;user-select:none}
+    .cs-control:hover{border-color:#94a3b8}
+    .cs-control.cs-open{border-color:#1B8183;box-shadow:0 0 0 3px rgba(27,129,131,.15)}
+    .cs-placeholder{color:#94a3b8;font-size:.925rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cs-control-actions{display:flex;align-items:center;gap:.35rem;margin-inline-start:.5rem}
+    .cs-clear-btn{display:none;align-items:center;justify-content:center;width:22px;height:22px;border:none;background:transparent;color:#94a3b8;border-radius:50%;cursor:pointer;padding:0;transition:all .15s ease}
+    .cs-clear-btn:hover{background-color:rgba(143,140,140,.192);color:#2e2e2e}
+    .cs-arrow{display:flex;align-items:center;justify-content:center;color:#64748b;transition:transform .2s ease}
+    .cs-control.cs-open .cs-arrow{transform:rotate(180deg)}
+    .cs-chips-container{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.65rem;align-items:center}
+    .cs-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .65rem;background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;color:#1e293b;box-shadow:0 1px 2px rgba(0,0,0,.03);transition:all .15s ease}
+    .cs-chip:hover{background-color:#f1f5f9;border-color:#cbd5e1}
+    .cs-chip-img{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1px solid #cbd5e1;flex-shrink:0}
+    .cs-chip-text{font-weight:500;line-height:1.2}
+    .cs-chip-remove{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border:none;background:#cbd5e1;color:#475569;border-radius:50%;cursor:pointer;font-size:.75rem;line-height:1;padding:0;transition:background .15s ease,color .15s ease;margin-inline-start:.25rem}
+    .cs-chip-remove:hover{background:#94a3b8;color:#1e293b}
+    .cs-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:1050;background-color:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);display:none;flex-direction:column;overflow:hidden}
+    .cs-control.cs-open + .cs-dropdown,.cs-dropdown.cs-show{display:flex}
+    .cs-search-wrapper{padding:.6rem;border-bottom:1px solid #f1f5f9;background-color:#f8fafc}
+    .cs-search-input{width:100%;padding:.45rem .75rem;font-size:.875rem;border:1px solid #cbd5e1;border-radius:6px;outline:none;transition:border-color .15s ease}
+    .cs-search-input:focus{border-color:#1B8183}
+    .cs-options-list{max-height:240px;overflow-y:auto;list-style:none;margin:0;padding:0}
+    .cs-option-item{display:flex;align-items:center;gap:.65rem;padding:.5rem .85rem;cursor:pointer;transition:background-color .15s ease;font-size:.875rem;color:#334155}
+    .cs-option-item:hover,.cs-option-item.cs-focused{background-color:#f1f5f9}
+    .cs-option-item.cs-selected{background-color:rgba(27,129,131,.08);color:#1B8183;font-weight:600}
+    .cs-option-item.cs-disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
+    .cs-option-checkbox{width:18px;height:18px;border:1.5px solid #94a3b8;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s ease;line-height:1;box-sizing:border-box;padding:0}
+    .cs-option-checkbox svg{width:12px;height:12px;stroke:currentColor;stroke-width:3;fill:none;display:block}
+    .cs-option-item.cs-selected .cs-option-checkbox{background-color:#1B8183;border-color:#1B8183;color:#fff}
+    .cs-select-all-header{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid #e2e8f0;background-color:#f8fafc;cursor:pointer;font-size:.875rem;font-weight:600;color:#334155;user-select:none;transition:background-color .15s ease}
+    .cs-select-all-header:hover,.cs-select-all-header.cs-focused{background-color:#f1f5f9}
+    .cs-select-all-header.cs-selected .cs-option-checkbox{background-color:#1B8183;border-color:#1B8183;color:#fff}
+    .cs-select-all-header.cs-indeterminate .cs-option-checkbox{background-color:#fff;border-color:#1B8183;color:#1B8183}
+    .cs-select-all-header.cs-indeterminate .cs-option-checkbox::after{content:'';display:block;width:8px;height:2px;background:#1B8183;border-radius:1px}
+    .cs-option-img{width:24px;height:24px;border-radius:50%;object-fit:cover;border:1px solid #cbd5e1;flex-shrink:0}
+    .cs-option-content{display:flex;flex-direction:column;flex-grow:1;min-width:0}
+    .cs-option-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cs-option-secondary{font-size:.75rem;color:#64748b}
+    .cs-no-results{padding:.85rem;text-align:center;color:#94a3b8;font-size:.875rem}
+    [dir="rtl"] .cs-arrow{margin-inline-start:.5rem;margin-inline-end:0}
+            `;
+            document.head.appendChild(s);
+        })();
+    }
+
+    if (typeof window.ChipSelect === 'undefined') {
+        window.ChipSelect = class ChipSelect {
+
+            constructor(element, options = {}) {
+                this.container = typeof element === 'string' ? document.querySelector(element) : element;
+                if (!this.container) {
+                    // No container: seed safe empty state so API calls don't throw.
+                    this.items = [];
+                    this.selectedValues = new Set();
+                    this._destroyed = true;
+                    return;
+                }
+
+                if (this.container.dataset.csInitialized === 'true') {
+                    const existing = this.container.id
+                        ? window.ChipSelect.instances.get(this.container.id)
+                        : null;
+                    if (existing) return existing;
+                }
+
+                const dataAttrs = this._extractDataAttributes();
+                if (options.searchable !== undefined) options.allowSearch = options.searchable;
+                if (options.clearable !== undefined) options.allowClear = options.clearable;
+
+                this.config = Object.assign({
+                    name: 'SelectedIds',
+                    label: '',
+                    placeholder: 'اختر عناصر...',
+                    searchPlaceholder: 'بحث...',
+                    searchAriaLabel: '',
+                    selectAllText: 'تحديد الكل',
+                    clearAllAriaLabel: 'مسح الكل',
+                    noResultsText: 'لا توجد نتائج',
+                    removeAriaPrefix: 'إزالة: ',
+                    partiallySelectedSuffix: 'محدد جزئياً',
+                    accessibleLabel: '',
+                    items: [],
+                    selectedValues: [],
+                    multiple: true,
+                    showImages: true,
+                    allowSearch: true,
+                    allowSelectAll: true,
+                    allowClear: true,
+                    closeOnSelect: false,
+                    maxSelections: null,
+                    normalizeArabic: true,
+                    onChange: null
+                }, dataAttrs, options);
+
+                // null/0/negative/NaN maxSelections = unlimited; irrelevant in single-select mode.
+                const ms = Number(this.config.maxSelections);
+                this.config.maxSelections = (Number.isFinite(ms) && ms > 0) ? Math.floor(ms) : null;
+
+                this.items = this._dedupeItems(Array.isArray(this.config.items) ? this.config.items : []);
+                // selectedValues can hold ids not yet in items (async pre-set) — getSelectedItems() filters those out.
+                this.selectedValues = new Set(this._normalizeSelectedIds(this.config.selectedValues, { warnLabel: 'initial selectedValues' }));
+
+                this._optionIdMap = new Map();
+                this._optionIdSeq = 0;
+
+                this.isOpen = false;
+                this.focusedIndex = -1;
+                this._searchQuery = '';
+                this._destroyed = false;
+
+                this.checkIconSvg = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
+                // Generated element ids come from this counter, not container.id.
+                ChipSelect._uidSeq = (ChipSelect._uidSeq || 0) + 1;
+                this._uid = `cs-uid-${ChipSelect._uidSeq}`;
+
+                this._handleKeyDown = this._handleKeyDown.bind(this);
+
+                if (this.container.id) {
+                    const existingForId = window.ChipSelect.instances.get(this.container.id);
+                    if (existingForId && existingForId.container !== this.container) {
+                        console.error(
+                            `ChipSelect: duplicate container id "${this.container.id}" detected. ` +
+                            `IDs must be unique. The previous instance for this id will no longer be ` +
+                            `reachable via getInstance("${this.container.id}"). Ensure each component ` +
+                            `has a unique id.`
+                        );
+                    }
+                    window.ChipSelect.instances.set(this.container.id, this);
+                } else {
+                    console.warn('ChipSelect: container has no id — instance will not be retrievable via getInstance().');
+                }
+                this.container.dataset.csInitialized = 'true';
+                window.ChipSelect._liveInstances.add(this);
+
+                this._init();
+            }
+
+            // ─── Public API ──────────────────────────────────────────────────────────
+
+            getSelectedValues() {
+                return Array.from(this.selectedValues);
+            }
+
+            getSelectedItems() {
+                return this.items.filter(item => this.selectedValues.has(String(item.id)));
+            }
+
+            setSelectedValues(values) {
+                if (!Array.isArray(values)) return;
+
+                const prev = this.selectedValues;
+                const next = new Set(this._normalizeSelectedIds(values, { warnLabel: 'setSelectedValues()' }));
+                const changed = prev.size !== next.size || Array.from(next).some(id => !prev.has(id));
+
+                this.selectedValues = next;
+                this._updateUI();
+                if (changed) this._triggerChange();
+            }
+
+            // Selects all loaded items, ignoring any active search filter. UI "Select
+            // All" uses _toggleSelectAll(), which operates on filtered items instead.
+            selectAll() {
+                if (!this.config.multiple) return;
+                const changed = this._selectItems(this.items);
+                this._setSearchQuery('');
+                if (this.searchInputEl) this.searchInputEl.value = '';
+                this._updateUI();
+                if (changed) this._triggerChange();
+            }
+
+            deselectAll() {
+                this.clear();
+            }
+
+            clear() {
+                const hadSelections = this.selectedValues.size > 0;
+                this.selectedValues.clear();
+                this._setSearchQuery('');
+                if (this.searchInputEl) this.searchInputEl.value = '';
+                this._updateUI();
+                if (hadSelections) this._triggerChange();
+            }
+
+            select(id) {
+                const strId = String(id);
+                if (!this.config.multiple) {
+                    // Re-selecting the current item is a no-op, not a clear-then-add.
+                    if (this.selectedValues.has(strId)) return;
+                    this.selectedValues.clear();
+                    this.selectedValues.add(strId);
+                    this._updateUI();
+                    this._triggerChange();
+                    return;
+                }
+                if (this._isSelectionLimitReached()) return;
+                if (this.selectedValues.has(strId)) return;
+                this.selectedValues.add(strId);
+                this._updateUI({ singleToggleId: strId });
+                this._triggerChange();
+            }
+
+            unselect(id) {
+                const strId = String(id);
+                if (this.selectedValues.has(strId)) {
+                    this.selectedValues.delete(strId);
+                    this._updateUI({ singleToggleId: strId });
+                    this._triggerChange();
+                }
+            }
+
+            setItems(newItems, options = {}) {
+                const merge = !!(options && options.merge);
+                const incoming = this._dedupeItems(Array.isArray(newItems) ? newItems : []);
+                const prevVisibleIds = new Set(this.getSelectedItems().map(i => String(i.id)));
+
+                this.items = merge ? this._dedupeItems([...this.items, ...incoming]) : incoming;
+                this.focusedIndex = -1;
+
+                this._updateUI();
+
+                const newVisibleIds = new Set(this.getSelectedItems().map(i => String(i.id)));
+                const changed = prevVisibleIds.size !== newVisibleIds.size ||
+                    Array.from(newVisibleIds).some(id => !prevVisibleIds.has(id));
+                if (changed) this._triggerChange();
+            }
+
+            addItems(newItems) {
+                this.setItems(newItems, { merge: true });
+            }
+
+            destroy() {
+                if (this._destroyed) return;
+                this._destroyed = true;
+
+                clearTimeout(this._focusTimer);
+                this._focusTimer = null;
+                clearTimeout(this._pendingMoveFocusTimer);
+                this._pendingMoveFocusTimer = null;
+
+                window.ChipSelect._liveInstances.delete(this);
+
+                if (this.container) {
+                    this.container.removeEventListener('keydown', this._handleKeyDown);
+                    if (this.container.id) {
+                        const registered = window.ChipSelect.instances.get(this.container.id);
+                        if (registered === this) {
+                            window.ChipSelect.instances.delete(this.container.id);
+                        }
+                    }
+                    try { this.container.innerHTML = ''; } catch (_) {}
+                    this.container.classList.remove('cs-wrapper');
+                    this.container.removeAttribute('tabindex');
+                    this.container.removeAttribute('role');
+                    this.container.removeAttribute('aria-expanded');
+                    this.container.removeAttribute('aria-haspopup');
+                    this.container.removeAttribute('aria-controls');
+                    this.container.removeAttribute('aria-activedescendant');
+                    this.container.removeAttribute('aria-labelledby');
+                    delete this.container.dataset.csInitialized;
+                }
+
+                this.container = null;
+                this.controlEl = null;
+                this.dropdownEl = null;
+                this.chipsContainerEl = null;
+                this.hiddenInputsEl = null;
+                this.optionsListEl = null;
+                this.searchInputEl = null;
+                this.clearBtnEl = null;
+                this.labelEl = null;
+            }
+
+            // ─── Selection Helpers ───────────────────────────────────────────────────
+
+            _isSelectionLimitReached() {
+                return this.config.maxSelections !== null &&
+                       this.selectedValues.size >= this.config.maxSelections;
+            }
+
+            _normalizeSelectedIds(rawIds, { warnLabel } = {}) {
+                let ids = Array.from(new Set((Array.isArray(rawIds) ? rawIds : []).map(v => String(v))));
+                if (!this.config.multiple) {
+                    if (ids.length > 1) {
+                        console.warn(`ChipSelect: ${warnLabel || 'selectedValues'} contained ${ids.length} ids in single-select mode; only the first is kept.`);
+                    }
+                    ids = ids.slice(0, 1);
+                } else if (this.config.maxSelections !== null && ids.length > this.config.maxSelections) {
+                    console.warn(`ChipSelect: ${warnLabel || 'selectedValues'} has ${ids.length} ids, exceeding maxSelections (${this.config.maxSelections}). Extra ids were truncated.`);
+                    ids = ids.slice(0, this.config.maxSelections);
+                }
+                return ids;
+            }
+
+            _selectItems(list) {
+                let changed = false;
+                for (const item of list) {
+                    if (this._isSelectionLimitReached()) break;
+                    const strId = String(item.id);
+                    if (!this.selectedValues.has(strId)) {
+                        this.selectedValues.add(strId);
+                        changed = true;
+                    }
+                }
+                return changed;
+            }
+
+            _deselectItems(list) {
+                let changed = false;
+                for (const item of list) {
+                    if (this.selectedValues.delete(String(item.id))) changed = true;
+                }
+                return changed;
+            }
+
+            _dedupeItems(list) {
+                const map = new Map();
+                for (const item of list) {
+                    if (item && item.id !== undefined && item.id !== null) {
+                        map.set(String(item.id), item);
+                    }
+                }
+                return Array.from(map.values());
+            }
+
+            _setSearchQuery(query) {
+                this._searchQuery = String(query || '');
+            }
+
+            _getFilteredItems() {
+                return this._filterItems(this._searchQuery);
+            }
+
+            _normalizeArabic(str) {
+                if (!this.config.normalizeArabic) return str;
+                return str
+                    .replace(/[\u064B-\u065F\u0670]/g, '')
+                    .replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627')
+                    .replace(/\u0649/g, '\u064A');
+            }
+
+            _filterItems(query) {
+                const raw = String(query || '').trim().toLowerCase();
+                if (!raw) return [...this.items];
+                const q = this._normalizeArabic(raw);
+                return this.items.filter(item => {
+                    // ?? not || — text/secondaryText of 0 or false must stay searchable.
+                    const text = this._normalizeArabic(String(item.text ?? '').toLowerCase());
+                    const sec  = this._normalizeArabic(String(item.secondaryText ?? '').toLowerCase());
+                    return text.includes(q) || sec.includes(q);
+                });
+            }
+
+            _handleSearch(query) {
+                this._setSearchQuery(query);
+                this.focusedIndex = -1;
+                this._renderDropdownItems();
+            }
+
+            // ─── Data Attribute Extraction ────────────────────────────────────────────
+
+            _extractDataAttributes() {
+                const ds = this.container.dataset;
+                const attrs = {};
+                if (ds.name) attrs.name = ds.name;
+                if (ds.label) attrs.label = ds.label;
+                if (ds.placeholder) attrs.placeholder = ds.placeholder;
+                if (ds.searchPlaceholder) attrs.searchPlaceholder = ds.searchPlaceholder;
+                if (ds.searchAriaLabel !== undefined) attrs.searchAriaLabel = ds.searchAriaLabel;
+                if (ds.selectAllText) attrs.selectAllText = ds.selectAllText;
+                if (ds.multiple !== undefined) attrs.multiple = ds.multiple !== 'false';
+                if (ds.showImages !== undefined) attrs.showImages = ds.showImages !== 'false';
+                if (ds.searchable !== undefined) attrs.allowSearch = ds.searchable !== 'false';
+                if (ds.allowSearch !== undefined) attrs.allowSearch = ds.allowSearch !== 'false';
+                if (ds.allowSelectAll !== undefined) attrs.allowSelectAll = ds.allowSelectAll !== 'false';
+                if (ds.clearable !== undefined) attrs.allowClear = ds.clearable !== 'false';
+                if (ds.allowClear !== undefined) attrs.allowClear = ds.allowClear !== 'false';
+                if (ds.closeOnSelect !== undefined) attrs.closeOnSelect = ds.closeOnSelect === 'true';
+                if (ds.maxSelections) attrs.maxSelections = parseInt(ds.maxSelections, 10);
+                return attrs;
+            }
+
+            // ─── Init ─────────────────────────────────────────────────────────────────
+
+            _init() {
+                const labelId   = `${this._uid}-label`;
+                const listboxId = `${this._uid}-listbox`;
+                const searchAria = this.config.searchAriaLabel || this.config.searchPlaceholder;
+
+                this.container.classList.add('cs-wrapper');
+                this.container.setAttribute('tabindex', '0');
+
+                this.container.setAttribute('role', 'combobox');
+                this.container.setAttribute('aria-expanded', 'false');
+                this.container.setAttribute('aria-haspopup', 'listbox');
+                this.container.setAttribute('aria-controls', listboxId);
+                if (this.config.label && labelId) {
+                    this.container.setAttribute('aria-labelledby', labelId);
+                } else {
+                    const accessibleName = this.config.accessibleLabel || this.config.placeholder ||
+                        this.config.searchAriaLabel || this.config.searchPlaceholder ||
+                        this.config.name || 'اختر عناصر';
+                    this.container.setAttribute('aria-label', accessibleName);
+                }
+
+                const clearAria = this._escapeHtml(this.config.clearAllAriaLabel);
+
+                this.container.innerHTML = `
+                    ${this.config.label
+                        ? `<label id="${this._escapeHtml(labelId)}" class="cs-label">${this._escapeHtml(this.config.label)}</label>`
+                        : ''}
+                    <div class="cs-control">
+                        <span class="cs-placeholder">${this._escapeHtml(this.config.placeholder)}</span>
+                        <div class="cs-control-actions">
+                            <button type="button" class="cs-clear-btn" aria-label="${clearAria}" title="${clearAria}">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                            <span class="cs-arrow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cs-dropdown"
+                         role="listbox"
+                         id="${this._escapeHtml(listboxId)}"
+                         ${this.config.multiple ? 'aria-multiselectable="true"' : ''}>
+                        ${this.config.allowSearch ? `
+                            <div class="cs-search-wrapper">
+                                <input type="text"
+                                       class="cs-search-input"
+                                       placeholder="${this._escapeHtml(this.config.searchPlaceholder)}"
+                                       aria-label="${this._escapeHtml(searchAria)}"
+                                       aria-autocomplete="list"
+                                       tabindex="-1" />
+                            </div>` : ''}
+                        <ul class="cs-options-list"></ul>
+                    </div>
+                    <div class="cs-chips-container"></div>
+                    <div class="cs-hidden-inputs"></div>
+                `;
+
+                this.controlEl        = this.container.querySelector('.cs-control');
+                this.dropdownEl       = this.container.querySelector('.cs-dropdown');
+                this.chipsContainerEl = this.container.querySelector('.cs-chips-container');
+                this.hiddenInputsEl   = this.container.querySelector('.cs-hidden-inputs');
+                this.optionsListEl    = this.container.querySelector('.cs-options-list');
+                this.searchInputEl    = this.container.querySelector('.cs-search-input');
+                this.clearBtnEl       = this.container.querySelector('.cs-clear-btn');
+                this.labelEl          = this.container.querySelector('.cs-label');
+
+                if (this.searchInputEl) {
+                    this.searchInputEl.setAttribute('aria-controls', listboxId);
+                }
+
+                this._bindEvents();
+                this._renderDropdownItems();
+                this._updateUI();
+            }
+
+            _bindEvents() {
+                this.controlEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this._toggleDropdown();
+                });
+
+                this.container.addEventListener('keydown', this._handleKeyDown);
+
+                if (this.labelEl) {
+                    this.labelEl.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.container.focus();
+                        if (!this.isOpen) this._openDropdown();
+                    });
+                }
+
+                if (this.clearBtnEl) {
+                    this.clearBtnEl.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.clear();
+                    });
+                }
+
+                if (this.searchInputEl) {
+                    this.searchInputEl.addEventListener('input', (e) => {
+                        this._handleSearch(e.target.value);
+                    });
+                    this.searchInputEl.addEventListener('click', (e) => e.stopPropagation());
+                }
+
+                this.optionsListEl.addEventListener('click', (e) => {
+                    const selectAllEl = e.target.closest('.cs-select-all-header');
+                    if (selectAllEl) {
+                        e.stopPropagation();
+                        this._toggleSelectAll();
+                        return;
+                    }
+                    const itemEl = e.target.closest('.cs-option-item');
+                    if (!itemEl || itemEl.classList.contains('cs-disabled')) return;
+                    e.stopPropagation();
+                    this._toggleSelection(itemEl.dataset.id);
+                });
+
+                this.chipsContainerEl.addEventListener('click', (e) => {
+                    const removeBtn = e.target.closest('.cs-chip-remove');
+                    if (!removeBtn) return;
+                    e.stopPropagation();
+                    this.unselect(removeBtn.dataset.id);
+                });
+            }
+
+            _handleDocumentClick(e) {
+                if (this._destroyed) return;
+                if (!this.container || !this.container.contains(e.target)) {
+                    this._closeDropdown('outside-click');
+                }
+            }
+
+            _handleKeyDown(e) {
+                if (this._destroyed) return;
+                if (e.isComposing) return;
+
+                if (e.target && e.target.tagName === 'BUTTON') return;
+
+                const inSearchInput = this.searchInputEl && e.target === this.searchInputEl;
+
+                if (!this.isOpen) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        this._openDropdown();
+                        if (e.key === 'ArrowDown') {
+                            clearTimeout(this._pendingMoveFocusTimer);
+                            this._pendingMoveFocusTimer = setTimeout(() => {
+                                if (this._destroyed || !this.isOpen) return;
+                                this._moveFocus(1);
+                            }, 60);
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this._openDropdown();
+                        clearTimeout(this._pendingMoveFocusTimer);
+                        this._pendingMoveFocusTimer = setTimeout(() => {
+                            if (this._destroyed || !this.isOpen) return;
+                            this._moveFocus(-1);
+                        }, 60);
+                    }
+                    return;
+                }
+
+                switch (e.key) {
+                    case 'Escape':
+                        e.preventDefault();
+                        this._closeDropdown('escape');
+                        break;
+
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        this._moveFocus(1);
+                        break;
+
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        this._moveFocus(-1);
+                        break;
+
+                    case 'Home':
+                        // ArrowLeft/ArrowRight stay native (cursor movement in search input).
+                        if (!inSearchInput) {
+                            e.preventDefault();
+                            this._jumpFocus('first');
+                        }
+                        break;
+
+                    case 'End':
+                        if (!inSearchInput) {
+                            e.preventDefault();
+                            this._jumpFocus('last');
+                        }
+                        break;
+
+                    case 'Enter': {
+                        // Always prevented while open so it never falls through to
+                        // submitting an enclosing <form>.
+                        e.preventDefault();
+                        const els = this._getFocusableOptionEls();
+                        const el = els[this.focusedIndex];
+                        if (!el) break;
+                        if (el.classList.contains('cs-select-all-header')) {
+                            this._toggleSelectAll();
+                        } else {
+                            this._toggleSelection(el.dataset.id);
+                        }
+                        break;
+                    }
+
+                    case ' ':
+                        if (inSearchInput) return; // let it type a space
+                        e.preventDefault();
+                        {
+                            const els = this._getFocusableOptionEls();
+                            const el = els[this.focusedIndex];
+                            if (!el) break;
+                            if (el.classList.contains('cs-select-all-header')) {
+                                this._toggleSelectAll();
+                            } else {
+                                this._toggleSelection(el.dataset.id);
+                            }
+                        }
+                        break;
+
+                    case 'Tab':
+                        this._closeDropdown('tab');
+                        break;
+                }
+            }
+
+            // ─── Dropdown ─────────────────────────────────────────────────────────────
+
+            _toggleDropdown() {
+                this.isOpen ? this._closeDropdown('toggle') : this._openDropdown();
+            }
+
+            _openDropdown() {
+                this.isOpen = true;
+                this.controlEl.classList.add('cs-open');
+                this.dropdownEl.classList.add('cs-show');
+                this.container.setAttribute('aria-expanded', 'true');
+
+                if (this.searchInputEl) {
+                    clearTimeout(this._focusTimer);
+                    this._focusTimer = setTimeout(() => {
+                        if (this._destroyed) return;
+                        this._focusTimer = null;
+                        this.searchInputEl.focus();
+                    }, 50);
+                } else if (this.container && document.activeElement !== this.container) {
+                    // No search input to receive focus — own it explicitly so
+                    // arrow/Enter/Space work right after a mouse-opened dropdown.
+                    this.container.focus();
+                }
+            }
+
+            _closeDropdown(reason) {
+                clearTimeout(this._focusTimer);
+                this._focusTimer = null;
+                clearTimeout(this._pendingMoveFocusTimer);
+                this._pendingMoveFocusTimer = null;
+                this.isOpen = false;
+                this.controlEl.classList.remove('cs-open');
+                this.dropdownEl.classList.remove('cs-show');
+                this.container.setAttribute('aria-expanded', 'false');
+                this.container.removeAttribute('aria-activedescendant');
+                if (this.searchInputEl) {
+                    this.searchInputEl.removeAttribute('aria-activedescendant');
+                }
+                this.focusedIndex = -1;
+                this._clearFocusHighlight();
+
+                // escape/select -> refocus container; outside-click -> leave focus alone;
+                // tab -> browser handles it; toggle -> focus already where it was.
+                if (reason === 'escape' || reason === 'select') {
+                    if (this.container) this.container.focus();
+                }
+            }
+
+            // ─── Selection Logic ──────────────────────────────────────────────────────
+
+            _toggleSelection(id) {
+                const strId = String(id);
+                const alreadySelected = this.selectedValues.has(strId);
+                if (!this.config.multiple) {
+                    // Clicking the already-selected option in single-select mode must be
+                    // a no-op, not a deselect-to-empty.
+                    if (!alreadySelected) this.select(strId);
+                } else if (alreadySelected) {
+                    this.unselect(strId);
+                } else {
+                    this.select(strId);
+                }
+                if (this.config.closeOnSelect) this._closeDropdown('select');
+            }
+
+            // UI Select All operates on the currently filtered items.
+            _toggleSelectAll() {
+                if (!this.config.multiple) return;
+                const target = this._getFilteredItems();
+                if (target.length === 0) return;
+                const targetIds = target.map(item => String(item.id));
+                const selectedTargetCount = targetIds.filter(id => this.selectedValues.has(id)).length;
+                const allTargetSelected = selectedTargetCount === targetIds.length;
+
+                let changed;
+                if (allTargetSelected) {
+                    changed = this._deselectItems(target);
+                } else if (selectedTargetCount > 0 && this._isSelectionLimitReached()) {
+                    changed = this._deselectItems(target);
+                } else {
+                    changed = this._selectItems(target);
+                }
+                this._updateUI();
+                if (changed) this._triggerChange();
+            }
+
+            // ─── Keyboard Focus ────────────────────────────────────────────────────────
+
+            _getFocusableOptionEls() {
+                if (!this.optionsListEl) return [];
+                return Array.from(this.optionsListEl.querySelectorAll('[role="option"]'));
+            }
+
+            _moveFocus(direction) {
+                const els = this._getFocusableOptionEls();
+                if (els.length === 0) return;
+                this.focusedIndex = this.focusedIndex === -1
+                    ? (direction === 1 ? 0 : els.length - 1)
+                    : (this.focusedIndex + direction + els.length) % els.length;
+                this._updateFocusHighlight(els);
+            }
+
+            _jumpFocus(position) {
+                const els = this._getFocusableOptionEls();
+                if (els.length === 0) return;
+                this.focusedIndex = position === 'first' ? 0 : els.length - 1;
+                this._updateFocusHighlight(els);
+            }
+
+            // aria-activedescendant goes on whichever of container/search-input
+            // currently holds real DOM focus — never both.
+            _updateFocusHighlight(elsArg) {
+                const els = elsArg || this._getFocusableOptionEls();
+                els.forEach((el, index) => {
+                    const isFocused = index === this.focusedIndex;
+                    el.classList.toggle('cs-focused', isFocused);
+                    if (isFocused) el.scrollIntoView({ block: 'nearest' });
+                });
+
+                const activeEl = els[this.focusedIndex];
+                const activeId = (activeEl && activeEl.id) ? activeEl.id : null;
+
+                const focusOwner = (this.searchInputEl && document.activeElement === this.searchInputEl)
+                    ? this.searchInputEl
+                    : this.container;
+                const other = focusOwner === this.searchInputEl ? this.container : this.searchInputEl;
+
+                if (activeId) {
+                    if (focusOwner) focusOwner.setAttribute('aria-activedescendant', activeId);
+                } else {
+                    if (focusOwner) focusOwner.removeAttribute('aria-activedescendant');
+                }
+                if (other) other.removeAttribute('aria-activedescendant');
+            }
+
+            _clearFocusHighlight() {
+                const els = this._getFocusableOptionEls();
+                els.forEach(el => el.classList.remove('cs-focused'));
+                if (this.container) this.container.removeAttribute('aria-activedescendant');
+                if (this.searchInputEl) this.searchInputEl.removeAttribute('aria-activedescendant');
+            }
+
+            // ─── Rendering ────────────────────────────────────────────────────────────
+
+            _bindImageErrorHandlers(root) {
+                root.querySelectorAll('img').forEach(img => {
+                    img.addEventListener('error', () => { img.style.display = 'none'; }, { once: true });
+                });
+            }
+
+            _renderSelectAllInPlace() {
+                if (!this.optionsListEl) return;
+                const existing = this.optionsListEl.querySelector('.cs-select-all-header');
+                if (!existing) return;
+                const filtered = this._getFilteredItems();
+                const { allSelected, someSelected } = this._getSelectAllState(filtered);
+                existing.classList.toggle('cs-selected', allSelected);
+                existing.classList.toggle('cs-indeterminate', !allSelected && someSelected);
+                existing.setAttribute('aria-selected', allSelected ? 'true' : 'false');
+                const checkbox = existing.querySelector('.cs-option-checkbox');
+                if (checkbox) {
+                    checkbox.innerHTML = allSelected ? this.checkIconSvg : '';
+                }
+                const textEl = existing.querySelector('.cs-select-all-text');
+                if (textEl) {
+                    const suffix = someSelected ? ` (${this.config.partiallySelectedSuffix})` : '';
+                    textEl.textContent = `${this.config.selectAllText}${suffix}`;
+                }
+            }
+
+            // In-place row update after a single select()/unselect() — avoids
+            // rebuilding the whole options list.
+            _updateOptionInPlace(id) {
+                if (!this.optionsListEl) return false;
+                const strId = String(id);
+                const el = this.optionsListEl.querySelector(`[data-id="${CSS.escape(strId)}"]`);
+                if (!el) return false;
+                const isSelected = this.selectedValues.has(strId);
+                const isDisabled = !isSelected && this._isSelectionLimitReached();
+                el.classList.toggle('cs-selected', isSelected);
+                el.classList.toggle('cs-disabled', isDisabled);
+                el.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+                if (isDisabled) {
+                    el.setAttribute('aria-disabled', 'true');
+                } else {
+                    el.removeAttribute('aria-disabled');
+                }
+                const checkbox = el.querySelector('.cs-option-checkbox');
+                if (checkbox) checkbox.innerHTML = isSelected ? this.checkIconSvg : '';
+                return true;
+            }
+
+            _updateDisabledStates() {
+                if (!this.optionsListEl) return;
+                const limitReached = this._isSelectionLimitReached();
+                this.optionsListEl.querySelectorAll('.cs-option-item').forEach(el => {
+                    const isSelected = el.classList.contains('cs-selected');
+                    const shouldDisable = !isSelected && limitReached;
+                    el.classList.toggle('cs-disabled', shouldDisable);
+                    if (shouldDisable) {
+                        el.setAttribute('aria-disabled', 'true');
+                    } else {
+                        el.removeAttribute('aria-disabled');
+                    }
+                });
+            }
+
+            _getSelectAllState(filtered) {
+                if (filtered.length === 0) return { allSelected: false, someSelected: false };
+                const allSelected = filtered.every(item => this.selectedValues.has(String(item.id)));
+                const someSelected = !allSelected && filtered.some(item => this.selectedValues.has(String(item.id)));
+                return { allSelected, someSelected };
+            }
+
+            _renderSelectAllOptionHtml() {
+                const filtered = this._getFilteredItems();
+                const { allSelected, someSelected } = this._getSelectAllState(filtered);
+                const optionId = `${this._uid}-option-selectall`;
+                let cls = 'cs-select-all-header';
+                if (allSelected) cls += ' cs-selected';
+                else if (someSelected) cls += ' cs-indeterminate';
+                // role="option" only supports aria-selected (boolean) — aria-checked is
+                // for checkbox/menuitemcheckbox/switch. "Some selected" is conveyed via
+                // the accessible-name suffix instead of an invalid attribute pairing.
+                const suffix = someSelected ? ` (${this.config.partiallySelectedSuffix})` : '';
+                return `
+                    <li class="${cls}"
+                        id="${optionId}"
+                        role="option"
+                        aria-selected="${allSelected ? 'true' : 'false'}">
+                        <span class="cs-option-checkbox cs-select-all-checkbox">${allSelected ? this.checkIconSvg : ''}</span>
+                        <span class="cs-select-all-text">${this._escapeHtml(this.config.selectAllText)}${this._escapeHtml(suffix)}</span>
+                    </li>`;
+            }
+
+            _getStableOptionId(itemIdStr) {
+                let token = this._optionIdMap.get(itemIdStr);
+                if (token === undefined) {
+                    token = `${this._uid}-option-${this._optionIdSeq++}`;
+                    this._optionIdMap.set(itemIdStr, token);
+                }
+                return token;
+            }
+
+            _renderOptionHtml(item) {
+                const itemIdStr = String(item.id);
+                const isSelected = this.selectedValues.has(itemIdStr);
+                const isDisabled = !isSelected && this._isSelectionLimitReached();
+                const safeImage = this.config.showImages ? this._sanitizeImageUrl(item.image) : '';
+                const optionId = this._getStableOptionId(itemIdStr);
+                return `
+                    <li class="cs-option-item${isSelected ? ' cs-selected' : ''}${isDisabled ? ' cs-disabled' : ''}"
+                        data-id="${this._escapeHtml(itemIdStr)}"
+                        id="${optionId}"
+                        role="option"
+                        aria-selected="${isSelected ? 'true' : 'false'}"
+                        ${isDisabled ? 'aria-disabled="true"' : ''}>
+                        <span class="cs-option-checkbox">${isSelected ? this.checkIconSvg : ''}</span>
+                        ${safeImage ? `<img src="${this._escapeHtml(safeImage)}" class="cs-option-img" alt="" />` : ''}
+                        <div class="cs-option-content">
+                            <span class="cs-option-text">${this._escapeHtml(item.text)}</span>
+                            ${item.secondaryText ? `<span class="cs-option-secondary">${this._escapeHtml(item.secondaryText)}</span>` : ''}
+                        </div>
+                    </li>
+                `;
+            }
+
+            _renderDropdownItems() {
+                if (!this.optionsListEl) return;
+                const filtered = this._getFilteredItems();
+                const parts = [];
+                // Select All can't do anything with zero selectable items.
+                if (this.config.multiple && this.config.allowSelectAll && filtered.length > 0) {
+                    parts.push(this._renderSelectAllOptionHtml());
+                }
+                if (filtered.length === 0) {
+                    parts.push(`<li class="cs-no-results" role="presentation">${this._escapeHtml(this.config.noResultsText)}</li>`);
+                } else {
+                    parts.push(filtered.map((item) => this._renderOptionHtml(item)).join(''));
+                }
+                this.optionsListEl.innerHTML = parts.join('');
+                this._bindImageErrorHandlers(this.optionsListEl);
+                if (this.focusedIndex >= 0) this._updateFocusHighlight();
+            }
+
+            _updateUI(opts = {}) {
+                if (this._destroyed) return;
+
+                const selectedItems = this.getSelectedItems();
+                const removePrefix = this.config.removeAriaPrefix;
+
+                if (this.chipsContainerEl) {
+                    this.chipsContainerEl.innerHTML = selectedItems.length === 0 ? '' : selectedItems.map(item => {
+                        const safeImage = this.config.showImages ? this._sanitizeImageUrl(item.image) : '';
+                        return `
+                            <div class="cs-chip">
+                                ${safeImage ? `<img src="${this._escapeHtml(safeImage)}" class="cs-chip-img" alt="" />` : ''}
+                                <span class="cs-chip-text">${this._escapeHtml(item.text)}</span>
+                                <button type="button" class="cs-chip-remove"
+                                        data-id="${this._escapeHtml(String(item.id))}"
+                                        aria-label="${this._escapeHtml(removePrefix)}${this._escapeHtml(item.text)}">×</button>
+                            </div>
+                        `;
+                    }).join('');
+                    this._bindImageErrorHandlers(this.chipsContainerEl);
+                }
+
+                if (this.hiddenInputsEl) {
+                    this.hiddenInputsEl.innerHTML = selectedItems.map(item =>
+                        `<input type="hidden" name="${this._escapeHtml(this.config.name)}" value="${this._escapeHtml(String(item.id))}" />`
+                    ).join('');
+                }
+
+                if (this.clearBtnEl) {
+                    const hasSelections = this.selectedValues.size > 0;
+                    this.clearBtnEl.style.display = (this.config.allowClear && hasSelections) ? 'inline-flex' : 'none';
+                }
+
+                if (opts.singleToggleId !== undefined && this._updateOptionInPlace(opts.singleToggleId)) {
+                    this._updateDisabledStates();
+                    this._renderSelectAllInPlace();
+                    if (this.focusedIndex >= 0) this._updateFocusHighlight();
+                } else {
+                    this._renderDropdownItems();
+                }
+            }
+
+            // ─── onChange ─────────────────────────────────────────────────────────────
+
+            _triggerChange() {
+                if (this._destroyed) return;
+                if (typeof this.config.onChange === 'function') {
+                    this.config.onChange(this.getSelectedItems(), this.getSelectedValues());
+                }
+            }
+
+            // ─── XSS Prevention ───────────────────────────────────────────────────────
+
+            _escapeHtml(str) {
+                if (str === null || str === undefined) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            _sanitizeImageUrl(url) {
+                if (!url) return '';
+                const trimmed = String(url).replace(/[\t\r\n]/g, '').trim();
+                if (!trimmed) return '';
+                if (/^data:image\/(png|jpe?g|gif|webp|avif|bmp|x-icon)[;,]/i.test(trimmed)) return trimmed;
+                if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
+                if (trimmed.startsWith('/') || trimmed.startsWith('./') || trimmed.startsWith('../')) return trimmed;
+                if (!/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return trimmed;
+                return '';
+            }
+        };
+
+        window.ChipSelect.instances ??= new Map();
+
+        window.ChipSelect._liveInstances ??= new Set();
+        if (!window.ChipSelect._globalClickBound) {
+            window.ChipSelect._globalClickBound = true;
+            document.addEventListener('click', (e) => {
+                window.ChipSelect._liveInstances.forEach((inst) => {
+                    if (!inst._destroyed) inst._handleDocumentClick(e);
+                });
+            });
+        }
+
+        window.ChipSelect.getInstance = function (id) {
+            if (!id) return null;
+            if (typeof id === 'object' && id instanceof window.ChipSelect) return id;
+            if (typeof id === 'object' && id.nodeType) {
+                return Array.from(window.ChipSelect.instances.values())
+                    .find(inst => inst.container === id) || null;
+            }
+            return window.ChipSelect.instances.get(String(id)) || null;
+        };
+
+        window.getChipSelect = function (id) {
+            const inst = window.ChipSelect.getInstance(id);
+            return inst ? inst.getSelectedItems() : [];
+        };
+
+        window.getChipSelectValues = function (id) {
+            const inst = window.ChipSelect.getInstance(id);
+            return inst ? inst.getSelectedValues() : [];
+        };
+
+        window.getChipSelectInstance = function (id) {
+            return window.ChipSelect.getInstance(id);
+        };
+    }
+
+    (function () {
+        const expectedId = @Html.Raw(elementIdJson);
+        const thisScript = document.currentScript;
+        const container = (thisScript && thisScript.previousElementSibling && thisScript.previousElementSibling.id === expectedId)
+            ? thisScript.previousElementSibling
+            : document.getElementById(expectedId);
+
+        function initInstance() {
+            if (!container || container.dataset.csInitialized === 'true') return;
+            new window.ChipSelect(container, {
+                items: @Html.Raw(itemsJson),
+                selectedValues: @Html.Raw(selectedJson)
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initInstance);
+        } else {
+            initInstance();
+        }
+    })();
+</script> 

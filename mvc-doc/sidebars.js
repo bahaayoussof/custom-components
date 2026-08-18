@@ -20,6 +20,7 @@ const sidebars = {
         { type: "doc", id: "components/AutoComplete/index", label: "AutoComplete" },
         { type: "doc", id: "components/SelectInput/index", label: "SelectInput" },
         { type: "doc", id: "components/MomahSelect/index", label: "MomahSelect" },
+        { type: "doc", id: "components/ChipSelect/index", label: "ChipSelect" },
         { type: "doc", id: "components/FileUpload/index", label: "FileUpload" },
         { type: "doc", id: "components/AttachBox/index", label: "AttachBox" },
         { type: "doc", id: "components/TextArea/index", label: "TextArea" },
